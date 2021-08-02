@@ -1,20 +1,31 @@
-/*******************************************************************************
-* (c) 2020, Cypress Semiconductor Corporation. All rights reserved.
-*******************************************************************************
-* This software, including source code, documentation and related materials
-* ("Software"), is owned by Cypress Semiconductor Corporation or one of its
-* subsidiaries ("Cypress") and is protected by and subject to worldwide patent
-* protection (United States and foreign), United States copyright laws and
-* international treaty provisions. Therefore, you may use this Software only
-* as provided in the license agreement accompanying the software package from
-* which you obtained this Software ("EULA").
+/******************************************************************************
+* File Name: main.c
 *
+* Description: This is the source code for the AnyCloud: 
+LE Findme Example
+*              for ModusToolbox.
+*
+* Related Document: See README.md
+*
+*
+*******************************************************************************
+* Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
+*
+* This software, including source code, documentation and related
+* materials ("Software") is owned by Cypress Semiconductor Corporation
+* or one of its affiliates ("Cypress") and is protected by and subject to
+* worldwide patent protection (United States and foreign),
+* United States copyright laws and international treaty provisions.
+* Therefore, you may use this Software only as provided in the license
+* agreement accompanying the software package from which you
+* obtained this Software ("EULA").
 * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
-* non-transferable license to copy, modify, and compile the Software source
-* code solely for use in connection with Cypress's integrated circuit products.
-* Any reproduction, modification, translation, compilation, or representation
-* of this Software except as specified above is prohibited without the express
-* written permission of Cypress.
+* non-transferable license to copy, modify, and compile the Software
+* source code solely for use in connection with Cypress's
+* integrated circuit products.  Any reproduction, modification, translation,
+* compilation, or representation of this Software except as specified
+* above is prohibited without the express written permission of Cypress.
 *
 * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
 * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
@@ -25,25 +36,14 @@
 * not authorize its products for use in any products where a malfunction or
 * failure of the Cypress product may reasonably be expected to result in
 * significant property damage, injury or death ("High Risk Product"). By
-* including Cypress's product in a High Risk Product, the manufacturer of such
-* system or application assumes all risk of such use and in doing so agrees to
-* indemnify Cypress against all liability.
-*******************************************************************************/
-
-/******************************************************************************
-* File Name: main.c
-*
-* Description:This is the source code for the AnyCloud: BLE Findme Example
-*              for ModusToolbox.
-*
-* Related Document: See README.md
-*
+* including Cypress's product in a High Risk Product, the manufacturer
+* of such system or application assumes all risk of such use and in doing
+* so agrees to indemnify Cypress against all liability.
 *******************************************************************************/
 
 /*******************************************************************************
-*        Header Files
+* Header Files
 *******************************************************************************/
-#include <app_platform_cfg.h>
 #include "wiced_bt_stack.h"
 #include "cybsp.h"
 #include "cy_retarget_io.h"
@@ -61,9 +61,10 @@
 #include "wiced_bt_dev.h"
 #include "app_bt_utils.h"
 
+
 /*******************************************************************************
-*        Macro Definitions
-*******************************************************************************/
+* Macros
+********************************************************************************/
 
 /* PWM frequency of LED's in Hertz when blinking */
 #define IAS_LED_PWM_FREQUENCY          (1)
@@ -92,7 +93,7 @@ typedef enum
 } app_bt_adv_conn_mode_t;
 
 /*******************************************************************************
-*        Variable Definitions
+* Variable Definitions
 *******************************************************************************/
 
 /* create PWM object for Alert LED */
@@ -111,24 +112,41 @@ static app_bt_adv_conn_mode_t    app_bt_adv_conn_state = APP_BT_ADV_OFF_CONN_OFF
 volatile int uxTopUsedPriority;
 
 /*******************************************************************************
-*        Function Prototypes
-*******************************************************************************/
+* Function Prototypes
+********************************************************************************/
 static void                   ias_led_update                 (void);
 static void                   adv_led_update                 (void);
-static void                   ble_app_init                   (void);
+static void                   le_app_init                    (void);
+static void*                  app_alloc_buffer               (int len);
+
+static void                   app_free_buffer                (uint8_t *p_event_data);
+
+typedef void                 (*pfn_free_buffer_t)            (uint8_t *);
+static gatt_db_lookup_table_t *le_app_find_by_handle         (uint16_t handle);
 
 /* GATT Event Callback Functions */
-static wiced_bt_gatt_status_t ble_app_write_handler          (wiced_bt_gatt_write_t *p_write_req, uint16_t conn_id);
-static wiced_bt_gatt_status_t ble_app_read_handler           (wiced_bt_gatt_read_t *p_read_req, uint16_t conn_id);
-static wiced_bt_gatt_status_t ble_app_connect_callback       (wiced_bt_gatt_connection_status_t *p_conn_status);
-static wiced_bt_gatt_status_t ble_app_server_callback        (uint16_t conn_id, wiced_bt_gatt_request_type_t type, wiced_bt_gatt_request_data_t *p_data);
-static wiced_bt_gatt_status_t ble_app_gatt_event_handler     (wiced_bt_gatt_evt_t  event, wiced_bt_gatt_event_data_t *p_event_data);
+static wiced_bt_gatt_status_t le_app_write_handler          (uint16_t conn_id,
+                                                              wiced_bt_gatt_opcode_t opcode,
+                                                              wiced_bt_gatt_write_req_t *p_write_req,
+                                                              uint16_t len_req);
+static wiced_bt_gatt_status_t le_app_read_handler           (uint16_t conn_id,
+                                                              wiced_bt_gatt_opcode_t opcode,
+                                                              wiced_bt_gatt_read_t *p_read_req,
+                                                              uint16_t len_req);
+static wiced_bt_gatt_status_t le_app_connect_handler        (wiced_bt_gatt_connection_status_t *p_conn_status);
+static wiced_bt_gatt_status_t le_app_server_handler         (wiced_bt_gatt_attribute_request_t *p_attr_req);
+static wiced_bt_gatt_status_t le_app_gatt_event_callback    (wiced_bt_gatt_evt_t  event,
+                                                              wiced_bt_gatt_event_data_t *p_event_data);
 
 /* Callback function for Bluetooth stack management type events */
-static wiced_bt_dev_status_t  app_bt_management_callback     (wiced_bt_management_evt_t event, wiced_bt_management_evt_data_t *p_event_data);
+static wiced_bt_dev_status_t  app_bt_management_callback     (wiced_bt_management_evt_t event,
+                                                              wiced_bt_management_evt_data_t *p_event_data);
+static wiced_bt_gatt_status_t app_bt_gatt_req_read_by_type_handler (uint16_t conn_id,
+                                                                    wiced_bt_gatt_opcode_t opcode,
+                                                                    wiced_bt_gatt_read_by_type_t *p_read_req, uint16_t len_requested);
 
 /******************************************************************************
- *                          Function Definitions
+ * Function Definitions
  ******************************************************************************/
 /*
  *  Entry point to the application. Set device configuration and start BT
@@ -137,16 +155,16 @@ static wiced_bt_dev_status_t  app_bt_management_callback     (wiced_bt_managemen
  */
 int main()
 {
-    cy_rslt_t rslt;
-    wiced_result_t result;
+    cy_rslt_t cy_result;
+    wiced_result_t wiced_result;
 
     /* This enables RTOS aware debugging in OpenOCD. */
     uxTopUsedPriority = configMAX_PRIORITIES - 1;
 
     /* Initialize the board support package */
-    rslt = cybsp_init();
+    cy_result = cybsp_init();
 
-    if (CY_RSLT_SUCCESS != rslt)
+    if (CY_RSLT_SUCCESS != cy_result)
     {
         CY_ASSERT(0);
     }
@@ -161,13 +179,13 @@ int main()
     printf("************* Find Me Profile Application Start ************************\n");
 
    /* Configure platform specific settings for the BT device */
-   cybt_platform_config_init(&bt_platform_cfg_settings);
+   cybt_platform_config_init(&cybsp_bt_platform_cfg);
 
    /* Register call back and configuration with stack */
-   result = wiced_bt_stack_init (app_bt_management_callback, &wiced_bt_cfg_settings);
+   wiced_result = wiced_bt_stack_init (app_bt_management_callback, &wiced_bt_cfg_settings);
 
    /* Check if stack initialization was successful */
-   if( WICED_BT_SUCCESS == result)
+   if( WICED_BT_SUCCESS == wiced_result)
    {
        printf("Bluetooth Stack Initialization Successful \n");
    }
@@ -184,23 +202,24 @@ int main()
     CY_ASSERT(0) ;
 }
 /**************************************************************************************************
-* Function Name: app_bt_management_callback()
+* Function Name: app_bt_management_callback
 ***************************************************************************************************
 * Summary:
 *   This is a Bluetooth stack event handler function to receive management events from
-*   the BLE stack and process as per the application.
+*   the LE stack and process as per the application.
 *
 * Parameters:
-*   wiced_bt_management_evt_t event             : BLE event code of one byte length
-*   wiced_bt_management_evt_data_t *p_event_data: Pointer to BLE management event structures
+*   wiced_bt_management_evt_t event             : LE event code of one byte length
+*   wiced_bt_management_evt_data_t *p_event_data: Pointer to LE management event structures
 *
 * Return:
 *  wiced_result_t: Error code from WICED_RESULT_LIST or BT_RESULT_LIST
 *
 *************************************************************************************************/
-wiced_result_t app_bt_management_callback(wiced_bt_management_evt_t event, wiced_bt_management_evt_data_t *p_event_data)
+wiced_result_t app_bt_management_callback(wiced_bt_management_evt_t event,
+                                          wiced_bt_management_evt_data_t *p_event_data)
 {
-    wiced_result_t status = WICED_BT_SUCCESS;
+    wiced_result_t wiced_result = WICED_BT_SUCCESS;
     wiced_bt_device_address_t bda = { 0 };
     wiced_bt_ble_advert_mode_t *p_adv_mode = NULL;
 
@@ -208,7 +227,6 @@ wiced_result_t app_bt_management_callback(wiced_bt_management_evt_t event, wiced
     {
         case BTM_ENABLED_EVT:
             /* Bluetooth Controller and Host Stack Enabled */
-
             if (WICED_BT_SUCCESS == p_event_data->enabled.status)
             {
                 wiced_bt_set_local_bdaddr((uint8_t *)cy_bt_device_address, BLE_ADDR_PUBLIC);
@@ -217,7 +235,7 @@ wiced_result_t app_bt_management_callback(wiced_bt_management_evt_t event, wiced
                 print_bd_address(bda);
 
                 /* Perform application-specific initialization */
-                ble_app_init();
+                le_app_init();
             }
             else
             {
@@ -271,15 +289,15 @@ wiced_result_t app_bt_management_callback(wiced_bt_management_evt_t event, wiced
             break;
     }
 
-    return status;
+    return wiced_result;
 }
 
 /**************************************************************************************************
-* Function Name: ble_app_init()
+* Function Name: le_app_init
 ***************************************************************************************************
 * Summary:
 *   This function handles application level initialization tasks and is called from the BT
-*   management callback once the BLE stack enabled event (BTM_ENABLED_EVT) is triggered
+*   management callback once the LE stack enabled event (BTM_ENABLED_EVT) is triggered
 *   This function is executed in the BTM_ENABLED_EVT management callback.
 *
 * Parameters:
@@ -289,21 +307,21 @@ wiced_result_t app_bt_management_callback(wiced_bt_management_evt_t event, wiced
 *  None
 *
 *************************************************************************************************/
-static void ble_app_init(void)
+static void le_app_init(void)
 {
-    cy_rslt_t rslt = CY_RSLT_SUCCESS;
-    wiced_result_t result = WICED_BT_SUCCESS;
-    wiced_bt_gatt_status_t status = WICED_BT_GATT_SUCCESS;
+    cy_rslt_t cy_result = CY_RSLT_SUCCESS;
+    wiced_result_t wiced_result = WICED_BT_SUCCESS;
+    wiced_bt_gatt_status_t gatt_status = WICED_BT_GATT_SUCCESS;
 
     printf("\n***********************************************\n");
     printf("**Discover device with \"Find Me Target\" name*\n");
     printf("***********************************************\n\n");
 
     /* Initialize the PWM used for IAS alert level LED */
-    rslt = cyhal_pwm_init(&ias_led_pwm, CYBSP_USER_LED1 , NULL);
+    cy_result = cyhal_pwm_init(&ias_led_pwm, CYBSP_USER_LED1 , NULL);
 
     /* PWM init failed. Stop program execution */
-    if (rslt != CY_RSLT_SUCCESS)
+    if (CY_RSLT_SUCCESS != cy_result  )
     {
         printf("IAS LED PWM Initialization has failed! \n");
         CY_ASSERT(0);
@@ -311,10 +329,10 @@ static void ble_app_init(void)
     /* CYBSP_USER_LED2 is only present on some kits. For those kits,it is used to indicate advertising/connection status */
 #ifdef CYBSP_USER_LED2
     /* Initialize the PWM used for Advertising LED */
-    rslt = cyhal_pwm_init(&adv_led_pwm, CYBSP_USER_LED2 , NULL);
+    cy_result = cyhal_pwm_init(&adv_led_pwm, CYBSP_USER_LED2 , NULL);
 
     /* PWM init failed. Stop program execution */
-    if (rslt != CY_RSLT_SUCCESS)
+    if (CY_RSLT_SUCCESS != cy_result)
     {
         printf("Advertisement LED PWM Initialization has failed! \n");
         CY_ASSERT(0);
@@ -327,19 +345,19 @@ static void ble_app_init(void)
     wiced_bt_ble_set_raw_advertisement_data(CY_BT_ADV_PACKET_DATA_SIZE, cy_bt_adv_packet_data);
 
     /* Register with BT stack to receive GATT callback */
-    status = wiced_bt_gatt_register(ble_app_gatt_event_handler);
-    printf("GATT event Handler registration status: %s \n",get_bt_gatt_status_name(status));
+    gatt_status = wiced_bt_gatt_register(le_app_gatt_event_callback);
+    printf("GATT event Handler registration status: %s \n",get_bt_gatt_status_name(gatt_status));
 
     /* Initialize GATT Database */
-    status = wiced_bt_gatt_db_init(gatt_database, gatt_database_len, NULL);
-    printf("GATT database initialization status: %s \n",get_bt_gatt_status_name(status));
+    gatt_status = wiced_bt_gatt_db_init(gatt_database, gatt_database_len, NULL);
+    printf("GATT database initialization status: %s \n",get_bt_gatt_status_name(gatt_status));
 
     /* Start Undirected LE Advertisements on device startup.
      * The corresponding parameters are contained in 'app_bt_cfg.c' */
-    result = wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
+    wiced_result = wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
 
     /* Failed to start advertisement. Stop program execution */
-    if (WICED_BT_SUCCESS != result)
+    if (WICED_BT_SUCCESS != wiced_result)
     {
         printf("failed to start advertisement! \n");
         CY_ASSERT(0);
@@ -347,126 +365,64 @@ static void ble_app_init(void)
 }
 
 /**************************************************************************************************
-* Function Name: ble_app_gatt_event_handler()
+* Function Name: le_app_gatt_event_callback
 ***************************************************************************************************
 * Summary:
 *   This function handles GATT events from the BT stack.
 *
 * Parameters:
-*   wiced_bt_gatt_evt_t event                   : BLE GATT event code of one byte length
-*   wiced_bt_gatt_event_data_t *p_event_data    : Pointer to BLE GATT event structures
+*   wiced_bt_gatt_evt_t event                   : LE GATT event code of one byte length
+*   wiced_bt_gatt_event_data_t *p_event_data    : Pointer to LE GATT event structures
 *
 * Return:
 *  wiced_bt_gatt_status_t: See possible status codes in wiced_bt_gatt_status_e in wiced_bt_gatt.h
 *
 **************************************************************************************************/
-static wiced_bt_gatt_status_t ble_app_gatt_event_handler(wiced_bt_gatt_evt_t event, wiced_bt_gatt_event_data_t *p_event_data)
+static wiced_bt_gatt_status_t le_app_gatt_event_callback(wiced_bt_gatt_evt_t event,
+                                                         wiced_bt_gatt_event_data_t *p_event_data)
 {
-    wiced_bt_gatt_status_t status = WICED_BT_GATT_ERROR;
-    wiced_bt_gatt_attribute_request_t *p_attr_req = NULL;
-
+    wiced_bt_gatt_status_t gatt_status = WICED_BT_GATT_ERROR;
+    wiced_bt_gatt_attribute_request_t *p_attr_req = &p_event_data->attribute_request;
     /* Call the appropriate callback function based on the GATT event type, and pass the relevant event
      * parameters to the callback function */
     switch ( event )
     {
         case GATT_CONNECTION_STATUS_EVT:
-            status = ble_app_connect_callback( &p_event_data->connection_status );
+            gatt_status = le_app_connect_handler( &p_event_data->connection_status );
             break;
 
         case GATT_ATTRIBUTE_REQUEST_EVT:
-            p_attr_req = &p_event_data->attribute_request;
-            status = ble_app_server_callback( p_attr_req->conn_id, p_attr_req->request_type, &p_attr_req->data );
+            gatt_status = le_app_server_handler( p_attr_req );
             break;
+        case GATT_GET_RESPONSE_BUFFER_EVT: /* GATT buffer request, typically sized to max of bearer mtu - 1 */
+            p_event_data->buffer_request.buffer.p_app_rsp_buffer =
+            app_alloc_buffer(p_event_data->buffer_request.len_requested);
+            p_event_data->buffer_request.buffer.p_app_ctxt = (void *)app_free_buffer;
+            gatt_status = WICED_BT_GATT_SUCCESS;
+            break;
+        case GATT_APP_BUFFER_TRANSMITTED_EVT: /* GATT buffer transmitted event,  check \ref wiced_bt_gatt_buffer_transmitted_t*/
+        {
+            pfn_free_buffer_t pfn_free = (pfn_free_buffer_t)p_event_data->buffer_xmitted.p_app_ctxt;
+
+            /* If the buffer is dynamic, the context will point to a function to free it. */
+            if (pfn_free)
+                pfn_free(p_event_data->buffer_xmitted.p_app_data);
+
+            gatt_status = WICED_BT_GATT_SUCCESS;
+        }
+            break;
+
 
         default:
-            status = WICED_BT_GATT_SUCCESS;
-            break;
+            gatt_status = WICED_BT_GATT_SUCCESS;
+               break;
     }
 
-    return status;
+    return gatt_status;
 }
 
 /**************************************************************************************************
-* Function Name: ble_app_get_value()
-***************************************************************************************************
-* Summary:
-*   This function handles reading of the attribute value from the GATT database and passing the
-*   data to the BT stack. The value read from the GATT database is stored in a buffer whose
-*   starting address is passed as one of the function parameters
-*
-* Parameters:
-*   wiced_bt_gatt_write_t *p_read_req           : Pointer that contains details of Read Request
-*                                                 including the attribute handle
-*
-* Return:
-*   wiced_bt_gatt_status_t: See possible status codes in wiced_bt_gatt_status_e in wiced_bt_gatt.h
-*
-**************************************************************************************************/
-static wiced_bt_gatt_status_t ble_app_get_value(wiced_bt_gatt_read_t *p_read_req)
-{
-    wiced_bool_t isHandleInTable = WICED_FALSE;
-    wiced_bt_gatt_status_t res = WICED_BT_GATT_INVALID_HANDLE;
-    uint16_t attr_handle = p_read_req->handle;
-    uint8_t *p_val = p_read_req->p_val;
-    uint16_t max_len = *p_read_req->p_val_len;
-    uint16_t *p_len = p_read_req->p_val_len;
-
-    /* Check for a matching handle entry */
-    for (int i = 0; i < app_gatt_db_ext_attr_tbl_size; i++)
-    {
-        if (app_gatt_db_ext_attr_tbl[i].handle == attr_handle)
-        {
-            /* Detected a matching handle in external lookup table */
-            isHandleInTable = WICED_TRUE;
-
-            /* Check if the buffer has space to store the data */
-            if (app_gatt_db_ext_attr_tbl[i].cur_len <= max_len)
-            {
-                /* Value fits within the supplied buffer; copy over the value */
-                *p_len = app_gatt_db_ext_attr_tbl[i].cur_len;
-                memcpy(p_val, app_gatt_db_ext_attr_tbl[i].p_data, app_gatt_db_ext_attr_tbl[i].cur_len);
-                res = WICED_BT_GATT_SUCCESS;
-
-                /* Add code for any action required when a particular attribute is read */
-                switch ( attr_handle )
-                {
-                    case HDLC_GAP_DEVICE_NAME_VALUE:
-                        break;
-                    case HDLC_GAP_APPEARANCE_VALUE:
-                        break;
-                }
-            }
-            else
-            {
-                /* Value to read will not fit within the buffer */
-                res = WICED_BT_GATT_INVALID_ATTR_LEN;
-            }
-            break;
-        }
-    }
-
-    if (!isHandleInTable)
-    {
-        /* Add code to read value for handles not contained within generated lookup table.
-         * This is a custom logic that depends on the application, and is not used in the
-         * current application. If the value for the current handle is successfully read in the
-         * below code snippet, then set the result using:
-         * res = WICED_BT_GATT_SUCCESS; */
-        switch ( attr_handle )
-        {
-            default:
-                /* The read operation was not performed for the indicated handle */
-                printf("Read Request to Invalid Handle: 0x%x\n", attr_handle);
-                res = WICED_BT_GATT_READ_NOT_PERMIT;
-                break;
-        }
-    }
-
-    return res;
-}
-
-/**************************************************************************************************
-* Function Name: ble_app_set_value()
+* Function Name: le_app_set_value
 ***************************************************************************************************
 * Summary:
 *   This function handles writing to the attribute handle in the GATT database using the
@@ -474,22 +430,22 @@ static wiced_bt_gatt_status_t ble_app_get_value(wiced_bt_gatt_read_t *p_read_req
 *   whose starting address is passed as one of the function parameters
 *
 * Parameters:
-*   wiced_bt_gatt_write_t *p_write_req          : Pointer that contains details of Write Request
-*                                                 including the attribute handle
+* @param attr_handle  GATT attribute handle
+* @param p_val        Pointer to LE GATT write request value
+* @param len          length of GATT write request
+*
 *
 * Return:
 *   wiced_bt_gatt_status_t: See possible status codes in wiced_bt_gatt_status_e in wiced_bt_gatt.h
 *
 **************************************************************************************************/
-static wiced_bt_gatt_status_t ble_app_set_value(wiced_bt_gatt_write_t *p_write_req)
+static wiced_bt_gatt_status_t le_app_set_value(uint16_t attr_handle,
+                                                uint8_t *p_val,
+                                                uint16_t len)
 {
     wiced_bool_t isHandleInTable = WICED_FALSE;
     wiced_bool_t validLen = WICED_FALSE;
-    wiced_bt_gatt_status_t res = WICED_BT_GATT_INVALID_HANDLE;
-    uint16_t attr_handle = p_write_req->handle;
-    uint8_t *p_val = p_write_req->p_val;
-    uint16_t len = p_write_req->val_len;
-
+    wiced_bt_gatt_status_t gatt_status = WICED_BT_GATT_INVALID_HANDLE;
     /* Check for a matching handle entry */
     for (int i = 0; i < app_gatt_db_ext_attr_tbl_size; i++)
     {
@@ -506,7 +462,7 @@ static wiced_bt_gatt_status_t ble_app_set_value(wiced_bt_gatt_write_t *p_write_r
                 /* Value fits within the supplied buffer; copy over the value */
                 app_gatt_db_ext_attr_tbl[i].cur_len = len;
                 memcpy(app_gatt_db_ext_attr_tbl[i].p_data, p_val, len);
-                res = WICED_BT_GATT_SUCCESS;
+                gatt_status = WICED_BT_GATT_SUCCESS;
 
                 /* Add code for any action required when this attribute is written.
                  * In this case, we update the IAS led based on the IAS alert
@@ -523,7 +479,7 @@ static wiced_bt_gatt_status_t ble_app_set_value(wiced_bt_gatt_write_t *p_write_r
             else
             {
                 /* Value to write does not meet size constraints */
-                res = WICED_BT_GATT_INVALID_ATTR_LEN;
+                gatt_status = WICED_BT_GATT_INVALID_ATTR_LEN;
             }
             break;
         }
@@ -541,66 +497,98 @@ static wiced_bt_gatt_status_t ble_app_set_value(wiced_bt_gatt_write_t *p_write_r
             default:
                 /* The write operation was not performed for the indicated handle */
                 printf("Write Request to Invalid Handle: 0x%x\n", attr_handle);
-                res = WICED_BT_GATT_WRITE_NOT_PERMIT;
+                gatt_status = WICED_BT_GATT_WRITE_NOT_PERMIT;
                 break;
         }
     }
 
-    return res;
+    return gatt_status;
 }
 
 /**************************************************************************************************
-* Function Name: ble_app_write_handler()
+* Function Name: le_app_write_handler
 ***************************************************************************************************
 * Summary:
 *   This function handles Write Requests received from the client device
 *
 * Parameters:
-*   wiced_bt_gatt_write_t *p_write_req          : Pointer that contains details of Write Request
-*                                                 including the attribute handle
-*   uint16_t conn_id                            : Connection ID
+*  @param conn_id       Connection ID
+*  @param opcode        LE GATT request type opcode
+*  @param p_write_req   Pointer to LE GATT write request
+*  @param len_req       length of data requested
 *
 * Return:
 *  wiced_bt_gatt_status_t: See possible status codes in wiced_bt_gatt_status_e in wiced_bt_gatt.h
 *
 **************************************************************************************************/
-static wiced_bt_gatt_status_t ble_app_write_handler(wiced_bt_gatt_write_t *p_write_req, uint16_t conn_id)
+static wiced_bt_gatt_status_t le_app_write_handler(uint16_t conn_id,
+                                                    wiced_bt_gatt_opcode_t opcode,
+                                                    wiced_bt_gatt_write_req_t *p_write_req,
+                                                    uint16_t len_req)
 {
-    wiced_bt_gatt_status_t status = WICED_BT_GATT_INVALID_HANDLE;
+    wiced_bt_gatt_status_t gatt_status = WICED_BT_GATT_INVALID_HANDLE;
 
     /* Attempt to perform the Write Request */
-    status = ble_app_set_value(p_write_req);
+    gatt_status = le_app_set_value(p_write_req->handle,
+                                p_write_req->p_val,
+                               p_write_req->val_len);
 
-    return status;
+    if( WICED_BT_GATT_SUCCESS != gatt_status )
+        {
+            printf("WARNING: GATT set attr status 0x%x\n", gatt_status);
+        }
+
+        return (gatt_status);
 }
 
 /**************************************************************************************************
-* Function Name: ble_app_read_handler()
+* Function Name: le_app_read_handler
 ***************************************************************************************************
 * Summary:
 *   This function handles Read Requests received from the client device
 *
 * Parameters:
-*   wiced_bt_gatt_write_t *p_read_req           : Pointer that contains details of Read Request
-*                                                 including the attribute handle
-*   uint16_t conn_id                            : Connection ID
+* @param conn_id       Connection ID
+* @param opcode        LE GATT request type opcode
+* @param p_read_req    Pointer to read request containing the handle to read
+* @param len_req       length of data requested
 *
 * Return:
 *  wiced_bt_gatt_status_t: See possible status codes in wiced_bt_gatt_status_e in wiced_bt_gatt.h
 *
 **************************************************************************************************/
-static wiced_bt_gatt_status_t ble_app_read_handler( wiced_bt_gatt_read_t *p_read_req, uint16_t conn_id )
+static wiced_bt_gatt_status_t le_app_read_handler( uint16_t conn_id,
+                                                    wiced_bt_gatt_opcode_t opcode,
+                                                    wiced_bt_gatt_read_t *p_read_req,
+                                                    uint16_t len_req)
 {
-    wiced_bt_gatt_status_t status = WICED_BT_GATT_INVALID_HANDLE;
 
-    /* Attempt to perform the Read Request */
-    status = ble_app_get_value(p_read_req);
+    gatt_db_lookup_table_t  *puAttribute;
+    int          attr_len_to_copy;
+    uint8_t     *from;
+    int          to_send;
 
-    return status;
+    puAttribute = le_app_find_by_handle(p_read_req->handle);
+    if ( NULL == puAttribute )
+    {
+        wiced_bt_gatt_server_send_error_rsp(conn_id, opcode, p_read_req->handle,
+                                            WICED_BT_GATT_INVALID_HANDLE);
+        return WICED_BT_GATT_INVALID_HANDLE;
+    }
+        attr_len_to_copy = puAttribute->cur_len;
+        if (p_read_req->offset >= puAttribute->cur_len)
+        {
+             wiced_bt_gatt_server_send_error_rsp(conn_id, opcode, p_read_req->handle,
+                                                 WICED_BT_GATT_INVALID_OFFSET);
+             return WICED_BT_GATT_INVALID_OFFSET;
+         }
+    to_send = MIN(len_req, attr_len_to_copy - p_read_req->offset);
+    from = ((uint8_t *)puAttribute->p_data) + p_read_req->offset;
+    return wiced_bt_gatt_server_send_read_handle_rsp(conn_id, opcode, to_send, from, NULL); /* No need for context, as buff not allocated */;
 }
 
 /**************************************************************************************************
-* Function Name: ble_app_connect_callback()
+* Function Name: le_app_connect_handler
 ***************************************************************************************************
 * Summary:
 *   This callback function handles connection status changes.
@@ -612,9 +600,9 @@ static wiced_bt_gatt_status_t ble_app_read_handler( wiced_bt_gatt_read_t *p_read
 *  wiced_bt_gatt_status_t: See possible status codes in wiced_bt_gatt_status_e in wiced_bt_gatt.h
 *
 **************************************************************************************************/
-static wiced_bt_gatt_status_t ble_app_connect_callback(wiced_bt_gatt_connection_status_t *p_conn_status)
+static wiced_bt_gatt_status_t le_app_connect_handler(wiced_bt_gatt_connection_status_t *p_conn_status)
 {
-    wiced_bt_gatt_status_t status = WICED_BT_GATT_ERROR;
+    wiced_bt_gatt_status_t gatt_status = WICED_BT_GATT_SUCCESS ;
 
     if ( NULL != p_conn_status )
     {
@@ -654,52 +642,71 @@ static wiced_bt_gatt_status_t ble_app_connect_callback(wiced_bt_gatt_connection_
         /* Update Advertisement LED to reflect the updated state */
         adv_led_update();
 
-        status = WICED_BT_GATT_SUCCESS;
+        gatt_status = WICED_BT_GATT_ERROR;
     }
 
-    return status;
+    return gatt_status;
 }
 
 /**************************************************************************************************
-* Function Name: ble_app_server_callback()
+* Function Name: le_app_server_handler
 ***************************************************************************************************
 * Summary:
 *   This function handles GATT server events from the BT stack.
 *
 * Parameters:
-*   uint16_t conn_id                            : Connection ID
-*   wiced_bt_gatt_request_type_t type           : Type of GATT server event
-*   wiced_bt_gatt_request_data_t *p_data        : Pointer to GATT server event data
+*  p_attr_req     Pointer to LE GATT connection status
 *
 * Return:
 *  wiced_bt_gatt_status_t: See possible status codes in wiced_bt_gatt_status_e in wiced_bt_gatt.h
 *
 **************************************************************************************************/
-static wiced_bt_gatt_status_t ble_app_server_callback(uint16_t conn_id, wiced_bt_gatt_request_type_t type, wiced_bt_gatt_request_data_t *p_data)
+static wiced_bt_gatt_status_t le_app_server_handler (wiced_bt_gatt_attribute_request_t *p_attr_req)
 {
-    wiced_bt_gatt_status_t status = WICED_BT_GATT_ERROR;
-
-    switch ( type )
+    wiced_bt_gatt_status_t gatt_status = WICED_BT_GATT_ERROR;
+    switch ( p_attr_req->opcode )
     {
-        case GATTS_REQ_TYPE_READ:
-            /* Attribute read request */
-            status = ble_app_read_handler( &p_data->read_req, conn_id );
-            break;
-        case GATTS_REQ_TYPE_WRITE:
-            /* Attribute write request */
-            status = ble_app_write_handler( &p_data->write_req, conn_id );
-            break;
+        case GATT_REQ_READ:
+        case GATT_REQ_READ_BLOB:
+             /* Attribute read request */
+            gatt_status = le_app_read_handler( p_attr_req->conn_id,p_attr_req->opcode,
+                                           &p_attr_req->data.read_req,
+                                           p_attr_req->len_requested);
+             break;
+        case GATT_REQ_WRITE:
+        case GATT_CMD_WRITE:
+             /* Attribute write request */
+             gatt_status = le_app_write_handler(p_attr_req->conn_id, p_attr_req->opcode,
+                                           &p_attr_req->data.write_req,
+                                           p_attr_req->len_requested );
+             break;
+        case GATT_REQ_MTU:
+            gatt_status = wiced_bt_gatt_server_send_mtu_rsp(p_attr_req->conn_id,
+                                                       p_attr_req->data.remote_mtu,
+                                                       CY_BT_MTU_SIZE);
+             break;
+        case GATT_HANDLE_VALUE_NOTIF:
+                    printf("Notfication send complete\n");
+             break;
+        case GATT_REQ_READ_BY_TYPE:
+            gatt_status = app_bt_gatt_req_read_by_type_handler(p_attr_req->conn_id, p_attr_req->opcode,
+                                                           &p_attr_req->data.read_by_type, p_attr_req->len_requested);
+             break;
+
+        default:
+                printf("ERROR: Unhandled GATT Connection Request case: %d\n", p_attr_req->opcode);
+                break;
     }
 
-    return status;
+    return gatt_status;
 }
 
 /*******************************************************************************
-* Function Name: adv_led_update()
+* Function Name: adv_led_update
 ********************************************************************************
 *
 * Summary:
-*   This function updates the advertising LED state based on BLE advertising/
+*   This function updates the advertising LED state based on LE advertising/
 *   connection state
 *
 * Parameters:
@@ -713,41 +720,41 @@ void adv_led_update(void)
 {
     /* CYBSP_USER_LED2 is only present on some kits. For those kits,it is used to indicate advertising/connection status */
 #ifdef CYBSP_USER_LED2
-    cy_rslt_t rslt = CY_RSLT_SUCCESS;
+    cy_rslt_t cy_result = CY_RSLT_SUCCESS;
     /* Stop the advertising led pwm */
     cyhal_pwm_stop(&adv_led_pwm);
 
-    /* Update LED state based on BLE advertising/connection state.
+    /* Update LED state based on LE advertising/connection state.
      * LED OFF for no advertisement/connection, LED blinking for advertisement
      * state, and LED ON for connected state  */
     switch(app_bt_adv_conn_state)
     {
         case APP_BT_ADV_OFF_CONN_OFF:
-            rslt = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_OFF_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
+            cy_result = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_OFF_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
             break;
 
         case APP_BT_ADV_ON_CONN_OFF:
-            rslt = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_BLINKING_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
+            cy_result = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_BLINKING_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
             break;
 
         case APP_BT_ADV_OFF_CONN_ON:
-            rslt = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_ON_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
+            cy_result = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_ON_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
             break;
 
         default:
             /* LED OFF for unexpected states */
-            rslt = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_OFF_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
+            cy_result = cyhal_pwm_set_duty_cycle(&adv_led_pwm, LED_OFF_DUTY_CYCLE, ADV_LED_PWM_FREQUENCY);
             break;
     }
     /* Check if update to PWM parameters is successful*/
-    if (CY_RSLT_SUCCESS != rslt)
+    if (CY_RSLT_SUCCESS != cy_result)
     {
          printf("Failed to set duty cycle parameters!!");
     }
 
-    rslt = cyhal_pwm_start(&adv_led_pwm);
+    cy_result = cyhal_pwm_start(&adv_led_pwm);
     /* Check if PWM started successfully */
-    if (CY_RSLT_SUCCESS != rslt)
+    if (CY_RSLT_SUCCESS != cy_result)
     {
          printf("Failed to start PWM !!");
     }
@@ -755,11 +762,11 @@ void adv_led_update(void)
 }
 
 /*******************************************************************************
-* Function Name: ias_led_update()
+* Function Name: ias_led_update
 ********************************************************************************
 *
 * Summary:
-*   This function updates the IAS alert level LED state based on BLE
+*   This function updates the IAS alert level LED state based on LE
 *   advertising/connection state
 *
 * Parameters:
@@ -771,7 +778,7 @@ void adv_led_update(void)
 *******************************************************************************/
 static void ias_led_update(void)
 {
-    cy_rslt_t rslt = CY_RSLT_SUCCESS;
+    cy_rslt_t cy_result = CY_RSLT_SUCCESS;
     /* Stop the IAS led pwm */
     cyhal_pwm_stop(&ias_led_pwm);
 
@@ -783,39 +790,171 @@ static void ias_led_update(void)
         switch(app_ias_alert_level[0])
         {
             case IAS_ALERT_LEVEL_LOW:
-                rslt = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_OFF_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
+                cy_result = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_OFF_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
                 break;
 
             case IAS_ALERT_LEVEL_MID:
-                rslt = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_BLINKING_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
+                cy_result = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_BLINKING_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
                 break;
 
             case IAS_ALERT_LEVEL_HIGH:
-                rslt = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_ON_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
+                cy_result = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_ON_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
                 break;
 
             default:
                 /* Consider any other level as High alert level */
-                rslt = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_ON_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
+                cy_result = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_ON_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
                 break;
         }
     }
     else
     {
         /* In case of disconnection, turn off the IAS LED */
-        rslt = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_OFF_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
+        cy_result = cyhal_pwm_set_duty_cycle(&ias_led_pwm, LED_OFF_DUTY_CYCLE, IAS_LED_PWM_FREQUENCY);
     }
 
     /* Check if update to PWM parameters is successful*/
-    if (CY_RSLT_SUCCESS != rslt)
+    if (CY_RSLT_SUCCESS != cy_result)
     {
          printf("Failed to set duty cycle parameters!!");
     }
 
-    rslt = cyhal_pwm_start(&ias_led_pwm);
+    cy_result = cyhal_pwm_start(&ias_led_pwm);
     /* Check if PWM started successfully */
-    if (CY_RSLT_SUCCESS != rslt)
+    if (CY_RSLT_SUCCESS != cy_result)
     {
          printf("Failed to start PWM !!");
     }
 }
+/*******************************************************************************
+ * Function Name: app_free_buffer
+ *******************************************************************************
+ * Summary:
+ *  This function frees up the memory buffer
+ *
+ *
+ * Parameters:
+ *  uint8_t *p_data: Pointer to the buffer to be free
+ *
+ ******************************************************************************/
+static void app_free_buffer(uint8_t *p_buf)
+{
+    vPortFree(p_buf);
+}
+
+/*******************************************************************************
+ * Function Name: app_alloc_buffer
+ *******************************************************************************
+ * Summary:
+ *  This function allocates a memory buffer.
+ *
+ *
+ * Parameters:
+ *  int len: Length to allocate
+ *
+ ******************************************************************************/
+static void* app_alloc_buffer(int len)
+{
+    return pvPortMalloc(len);
+}
+/*******************************************************************************
+ * Function Name : le_app_find_by_handle
+ * *****************************************************************************
+ * Summary : @brief  Find attribute description by handle
+ *
+ * @param handle    handle to look up
+ *
+ * @return gatt_db_lookup_table_t   pointer containing handle data
+ ******************************************************************************/
+static gatt_db_lookup_table_t  *le_app_find_by_handle(uint16_t handle)
+{
+    int i;
+    for (i = 0; i < app_gatt_db_ext_attr_tbl_size; i++)
+    {
+        if (handle == app_gatt_db_ext_attr_tbl[i].handle )
+        {
+            return (&app_gatt_db_ext_attr_tbl[i]);
+        }
+    }
+    return NULL;
+}
+/**
+ * Function Name:
+ * app_bt_gatt_req_read_by_type_handler
+ *
+ * Function Description:
+ * @brief  Process read-by-type request from peer device
+ *
+ * @param conn_id       Connection ID
+ * @param opcode        LE GATT request type opcode
+ * @param p_read_req    Pointer to read request containing the handle to read
+ * @param len_requested length of data requested
+ *
+ * @return wiced_bt_gatt_status_t  LE GATT status
+ */
+static wiced_bt_gatt_status_t app_bt_gatt_req_read_by_type_handler(uint16_t conn_id,
+                                                                   wiced_bt_gatt_opcode_t opcode,
+                                                                   wiced_bt_gatt_read_by_type_t *p_read_req,
+                                                                   uint16_t len_requested)
+{
+    gatt_db_lookup_table_t *puAttribute;
+    uint16_t last_handle = 0;
+    uint16_t attr_handle = p_read_req->s_handle;
+    uint8_t *p_rsp = app_alloc_buffer(len_requested);
+    uint8_t pair_len = 0;
+    int used_len = 0;
+
+    if (NULL == p_rsp)
+    {
+        printf("No memory, len_requested: %d!!\r\n",len_requested);
+        wiced_bt_gatt_server_send_error_rsp(conn_id, opcode, attr_handle, WICED_BT_GATT_INSUF_RESOURCE);
+        return WICED_BT_GATT_INSUF_RESOURCE;
+    }
+
+    /* Read by type returns all attributes of the specified type, between the start and end handles */
+    while (WICED_TRUE)
+    {
+        last_handle = attr_handle;
+        attr_handle = wiced_bt_gatt_find_handle_by_type(attr_handle, p_read_req->e_handle,
+                                                        &p_read_req->uuid);
+        if (0 == attr_handle )
+            break;
+
+        if ( NULL == (puAttribute = le_app_find_by_handle(attr_handle)))
+        {
+            printf("found type but no attribute for %d \r\n",last_handle);
+            wiced_bt_gatt_server_send_error_rsp(conn_id, opcode, p_read_req->s_handle,
+                                                WICED_BT_GATT_ERR_UNLIKELY);
+            app_free_buffer(p_rsp);
+            return WICED_BT_GATT_INVALID_HANDLE;
+        }
+
+        {
+            int filled = wiced_bt_gatt_put_read_by_type_rsp_in_stream(p_rsp + used_len, len_requested - used_len, &pair_len,
+                                                                attr_handle, puAttribute->cur_len, puAttribute->p_data);
+            if (0 == filled)
+            {
+                break;
+            }
+            used_len += filled;
+        }
+
+        /* Increment starting handle for next search to one past current */
+        attr_handle++;
+    }
+
+    if (0 == used_len)
+    {
+       printf("attr not found  start_handle: 0x%04x  end_handle: 0x%04x  Type: 0x%04x\r\n",
+               p_read_req->s_handle, p_read_req->e_handle, p_read_req->uuid.uu.uuid16);
+        wiced_bt_gatt_server_send_error_rsp(conn_id, opcode, p_read_req->s_handle, WICED_BT_GATT_INVALID_HANDLE);
+        app_free_buffer(p_rsp);
+        return WICED_BT_GATT_INVALID_HANDLE;
+    }
+
+    /* Send the response */
+
+    return wiced_bt_gatt_server_send_read_by_type_rsp(conn_id, opcode, pair_len, used_len, p_rsp, (void *)app_free_buffer);
+}
+
+/* END OF FILE [] */
