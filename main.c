@@ -1,15 +1,14 @@
 /******************************************************************************
 * File Name: main.c
 *
-* Description: This is the source code for the AnyCloud: 
-LE Findme Example
+* Description: This is the source code for the LE Findme Example
 *              for ModusToolbox.
 *
 * Related Document: See README.md
 *
 *
 *******************************************************************************
-* Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2020-2022, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -175,7 +174,6 @@ int main()
     /* Initialize retarget-io to use the debug UART port */
     cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX, CY_RETARGET_IO_BAUDRATE);
 
-    printf("*********************AnyCloud Example***********************************\n");
     printf("************* Find Me Profile Application Start ************************\n");
 
    /* Configure platform specific settings for the BT device */
@@ -318,7 +316,7 @@ static void le_app_init(void)
     printf("***********************************************\n\n");
 
     /* Initialize the PWM used for IAS alert level LED */
-    cy_result = cyhal_pwm_init(&ias_led_pwm, CYBSP_USER_LED1 , NULL);
+    cy_result = cyhal_pwm_init_adv(&ias_led_pwm, CYBSP_USER_LED1 , NC, CYHAL_PWM_RIGHT_ALIGN, true, 0u, false, NULL);
 
     /* PWM init failed. Stop program execution */
     if (CY_RSLT_SUCCESS != cy_result  )
@@ -329,7 +327,7 @@ static void le_app_init(void)
     /* CYBSP_USER_LED2 is only present on some kits. For those kits,it is used to indicate advertising/connection status */
 #ifdef CYBSP_USER_LED2
     /* Initialize the PWM used for Advertising LED */
-    cy_result = cyhal_pwm_init(&adv_led_pwm, CYBSP_USER_LED2 , NULL);
+    cy_result = cyhal_pwm_init_adv(&adv_led_pwm, CYBSP_USER_LED2 , NC, CYHAL_PWM_RIGHT_ALIGN, true, 0u, false, NULL);
 
     /* PWM init failed. Stop program execution */
     if (CY_RSLT_SUCCESS != cy_result)

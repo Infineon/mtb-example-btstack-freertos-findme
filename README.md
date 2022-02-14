@@ -1,16 +1,16 @@
-# AnyCloud: Bluetooth&reg; LE Find Me Profile
+# Bluetooth&reg; LE Find Me Profile
 
 This code example demonstrates the implementation of a simple Bluetooth&reg; Immediate Alert Service (IAS)-based Find Me Profile (FMP) using AIROC™ CYW43xxx Wi-Fi & Bluetooth® combo chips and ModusToolbox™ software environment.
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-anycloud-ble-findme)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyOTciLCJTcGVjIE51bWJlciI6IjAwMi0zMDI5NyIsIkRvYyBUaXRsZSI6IkFueUNsb3VkOiBCbHVldG9vdGgmcmVnOyBMRSBGaW5kIE1lIFByb2ZpbGUiLCJyaWQiOiJhbW1sIiwiRG9jIHZlcnNpb24iOiIyLjAuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyOTciLCJTcGVjIE51bWJlciI6IjAwMi0zMDI5NyIsIkRvYyBUaXRsZSI6IkJsdWV0b290aCZyZWc7IExFIEZpbmQgTWUgUHJvZmlsZSIsInJpZCI6ImFtbWwiLCJEb2MgdmVyc2lvbiI6IjMuMC4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
 
 ## Requirements
 
-- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3  with ModusToolbox tools patch 2.3.1
+- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.4
 - Programming language: C
-- Board support package (BSP) minimum required version: 2.0.0
+- Board support package (BSP) minimum required version: 3.0.0
 - Associated parts: All [PSoC&trade; 6 MCU](http://www.cypress.com/PSoC6) with [AIROC™ CYW43xxx Wi-Fi & Bluetooth® combo chips](https://www.cypress.com/products/airoc-wi-fi-combos)
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
@@ -30,6 +30,7 @@ This code example demonstrates the implementation of a simple Bluetooth&reg; Imm
 - [PSoC&trade; 62S3 Wi-Fi Bluetooth&reg; prototyping kit](https://www.cypress.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
 - Rapid IoT connect developer kit (`CYSBSYSKIT-DEV-01`)
 - Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`)
+- [PSoC&trade; 62S2 evaluation kit](https://www.cypress.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2`, `CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`)
 
 ## Hardware setup
 
@@ -95,7 +96,7 @@ Argument | Description | Required/optional
 `--user-app-name`| Specify the name of the application if you prefer to have a name other than the example's default name | Optional
 
 
-The following example will clone the "[AnyCloud: Bluetooth&reg; LE find me profile](https://github.com/Infineon/mtb-example-anycloud-ble-findme)" application with the desired name "mtb-example-anycloud-ble-findme" configured for the *CY8CPROTO-062-4343W* BSP into the specified working directory, *C:/mtb_projects*:
+The following example will clone the "[Bluetooth&reg; LE find me profile](https://github.com/Infineon/mtb-example-anycloud-ble-findme)" application with the desired name "mtb-example-anycloud-ble-findme" configured for the *CY8CPROTO-062-4343W* BSP into the specified working directory, *C:/mtb_projects*:
 
    ```
    project-creator-cli --board-id CY8CPROTO-062-4343W --app-id mtb-example-anycloud-ble-findme --user-app-name mtb-example-anycloud-ble-findme --target-dir "C:/mtb_projects"
@@ -283,13 +284,14 @@ Cypress&trade; provides a wealth of data at www.cypress.com to help you select t
 
 ## Document history
 
-Document Title: CE230297 – AnyCloud: Bluetooth&reg; LE find me profile
+Document Title: CE230297 – Bluetooth&reg; LE find me profile
 
 | Version | Description of change |
 | ------- | --------------------- |
 | 1.0.0   | New code example      |
 | 1.1.0   | Added support for Rapid IoT Connect Developer Kit (CYSBSYSKIT-DEV-01) |
 | 2.0.0   | Code Example updated to support ModusToolbox&trade; software v2.3.1 and it is not backward compatible with v2.3 and below|
+| 3.0.0   | Added support for 43439 kit <br /> Updated BSP to 3.0.0|
 
 ------
 
