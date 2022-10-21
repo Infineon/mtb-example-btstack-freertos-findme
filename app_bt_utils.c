@@ -97,7 +97,7 @@ void print_array(void * to_print, uint16_t len)
 }
 
 /*******************************************************************************
-* Function Name: get_bt_event_name
+* Function Name: get_btm_event_name
 ********************************************************************************
 * Summary:
 * The function converts the wiced_bt_management_evt_t enum value to its
@@ -111,12 +111,10 @@ void print_array(void * to_print, uint16_t len)
 *  wiced_bt_management_evt_t
 *
 *******************************************************************************/
-const char *get_bt_event_name(wiced_bt_management_evt_t event)
+const char *get_btm_event_name(wiced_bt_management_evt_t event)
 {
-
     switch ( (int)event )
     {
-
     CASE_RETURN_STR(BTM_ENABLED_EVT)
     CASE_RETURN_STR(BTM_DISABLED_EVT)
     CASE_RETURN_STR(BTM_POWER_MANAGEMENT_STATUS_EVT)
@@ -149,10 +147,10 @@ const char *get_bt_event_name(wiced_bt_management_evt_t event)
     CASE_RETURN_STR(BTM_SCO_CONNECTION_REQUEST_EVT)
     CASE_RETURN_STR(BTM_SCO_CONNECTION_CHANGE_EVT)
     CASE_RETURN_STR(BTM_BLE_CONNECTION_PARAM_UPDATE)
-#ifdef CYW20819A1
     CASE_RETURN_STR(BTM_BLE_PHY_UPDATE_EVT)
-#endif
-
+    CASE_RETURN_STR(BTM_LPM_STATE_LOW_POWER)
+    CASE_RETURN_STR(BTM_MULTI_ADVERT_RESP_EVENT)
+    CASE_RETURN_STR(BTM_BLE_DATA_LENGTH_UPDATE_EVENT)
     }
 
     return "UNKNOWN_EVENT";
@@ -175,10 +173,8 @@ const char *get_bt_event_name(wiced_bt_management_evt_t event)
 *******************************************************************************/
 const char *get_bt_advert_mode_name(wiced_bt_ble_advert_mode_t mode)
 {
-
     switch ( (int)mode )
     {
-
     CASE_RETURN_STR(BTM_BLE_ADVERT_OFF)
     CASE_RETURN_STR(BTM_BLE_ADVERT_DIRECTED_HIGH)
     CASE_RETURN_STR(BTM_BLE_ADVERT_DIRECTED_LOW)
@@ -188,7 +184,6 @@ const char *get_bt_advert_mode_name(wiced_bt_ble_advert_mode_t mode)
     CASE_RETURN_STR(BTM_BLE_ADVERT_NONCONN_LOW)
     CASE_RETURN_STR(BTM_BLE_ADVERT_DISCOVERABLE_HIGH)
     CASE_RETURN_STR(BTM_BLE_ADVERT_DISCOVERABLE_LOW)
-
     }
 
     return "UNKNOWN_MODE";
@@ -211,10 +206,8 @@ const char *get_bt_advert_mode_name(wiced_bt_ble_advert_mode_t mode)
 *******************************************************************************/
 const char *get_bt_gatt_disconn_reason_name(wiced_bt_gatt_disconn_reason_t reason)
 {
-
     switch ( (int)reason )
     {
-
     CASE_RETURN_STR(GATT_CONN_UNKNOWN)
     CASE_RETURN_STR(GATT_CONN_L2C_FAILURE)
     CASE_RETURN_STR(GATT_CONN_TIMEOUT)
@@ -223,7 +216,6 @@ const char *get_bt_gatt_disconn_reason_name(wiced_bt_gatt_disconn_reason_t reaso
     CASE_RETURN_STR(GATT_CONN_FAIL_ESTABLISH)
     CASE_RETURN_STR(GATT_CONN_LMP_TIMEOUT)
     CASE_RETURN_STR(GATT_CONN_CANCEL)
-
     }
 
     return "UNKNOWN_REASON";
@@ -246,11 +238,9 @@ const char *get_bt_gatt_disconn_reason_name(wiced_bt_gatt_disconn_reason_t reaso
 *******************************************************************************/
 const char *get_bt_gatt_status_name(wiced_bt_gatt_status_t status)
 {
-
     switch ( (int)status )
     {
-
-    CASE_RETURN_STR(WICED_BT_GATT_SUCCESS || WICED_BT_GATT_ENCRYPTED_MITM)
+    CASE_RETURN_STR(WICED_BT_GATT_SUCCESS)
     CASE_RETURN_STR(WICED_BT_GATT_INVALID_HANDLE)
     CASE_RETURN_STR(WICED_BT_GATT_READ_NOT_PERMIT)
     CASE_RETURN_STR(WICED_BT_GATT_WRITE_NOT_PERMIT)
@@ -268,6 +258,8 @@ const char *get_bt_gatt_status_name(wiced_bt_gatt_status_t status)
     CASE_RETURN_STR(WICED_BT_GATT_INSUF_ENCRYPTION)
     CASE_RETURN_STR(WICED_BT_GATT_UNSUPPORT_GRP_TYPE)
     CASE_RETURN_STR(WICED_BT_GATT_INSUF_RESOURCE)
+        CASE_RETURN_STR(WICED_BT_GATT_DATABASE_OUT_OF_SYNC)
+    CASE_RETURN_STR(WICED_BT_GATT_VALUE_NOT_ALLOWED)
     CASE_RETURN_STR(WICED_BT_GATT_ILLEGAL_PARAMETER)
     CASE_RETURN_STR(WICED_BT_GATT_NO_RESOURCES)
     CASE_RETURN_STR(WICED_BT_GATT_INTERNAL_ERROR)
@@ -284,11 +276,16 @@ const char *get_bt_gatt_status_name(wiced_bt_gatt_status_t status)
     CASE_RETURN_STR(WICED_BT_GATT_ENCRYPTED_NO_MITM)
     CASE_RETURN_STR(WICED_BT_GATT_NOT_ENCRYPTED)
     CASE_RETURN_STR(WICED_BT_GATT_CONGESTED)
+    CASE_RETURN_STR(WICED_BT_GATT_NOT_ALLOWED)
+    CASE_RETURN_STR(WICED_BT_GATT_HANDLED)
+    CASE_RETURN_STR(WICED_BT_GATT_NO_PENDING_OPERATION)
+    CASE_RETURN_STR(WICED_BT_GATT_INDICATION_RESPONSE_PENDING)
     CASE_RETURN_STR(WICED_BT_GATT_WRITE_REQ_REJECTED)
     CASE_RETURN_STR(WICED_BT_GATT_CCC_CFG_ERR)
     CASE_RETURN_STR(WICED_BT_GATT_PRC_IN_PROGRESS)
     CASE_RETURN_STR(WICED_BT_GATT_OUT_OF_RANGE)
-
+    CASE_RETURN_STR(WICED_BT_GATT_BAD_OPCODE)
+    CASE_RETURN_STR(WICED_BT_GATT_INVALID_CONNECTION_ID)
     }
 
     return "UNKNOWN_STATUS";

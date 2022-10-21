@@ -59,6 +59,7 @@
 #include "GeneratedSource/cycfg_gap.h"
 #include "wiced_bt_dev.h"
 #include "app_bt_utils.h"
+#include "cybsp_bt_config.h"
 
 
 /*******************************************************************************
@@ -283,7 +284,7 @@ wiced_result_t app_bt_management_callback(wiced_bt_management_evt_t event,
             break;
 
         default:
-            printf("Unhandled Bluetooth Management Event: 0x%x %s\n", event, get_bt_event_name(event));
+            printf("Unhandled Bluetooth Management Event: 0x%x %s\n", event, get_btm_event_name(event));
             break;
     }
 
