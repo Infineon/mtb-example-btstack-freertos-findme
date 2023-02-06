@@ -1,34 +1,31 @@
 # Bluetooth&reg; LE Find Me Profile
 
-This code example demonstrates the implementation of a simple Bluetooth&reg; Immediate Alert Service (IAS)-based Find Me Profile (FMP) using PSoC&trade;  6 MCU, AIROC&trade;  CYW20829 and ModusToolbox&trade;  software environment.
+This code example demonstrates the implementation of a simple Bluetooth&reg; Immediate Alert Service (IAS)-based Find Me Profile (FMP) using Infineon&reg; PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE, AIROC&trade; CYW20829 and AIROC&trade; WiFi & Bluetooth&reg; combo SoC devices with ModusToolbox&trade;  software environment.
 
-The code example can run on either CM4 or CM0+ core of PSoC&trade; 6 MCU. Refer to KBA236435 for steps to port a Wi-Fi or Bluetooth LE application to CM0+ core of PSoC&trade; 6 MCU.
+The code example can run on either CM4 or CM0+ core of PSoC&trade; 6 MCU with AIROC&trade; WiFi & Bluetooth&reg; combo SoC. Refer to KBA236435 for steps to port a Wi-Fi or Bluetooth LE application to CM0+ core of PSoC&trade; 6 MCU. Note that PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not support this feature.
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-btstack-freertos-findme)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyOTciLCJTcGVjIE51bWJlciI6IjAwMi0zMDI5NyIsIkRvYyBUaXRsZSI6IkJsdWV0b290aCZyZWc7IExFIEZpbmQgTWUgUHJvZmlsZSIsInJpZCI6ImFtbWwiLCJEb2MgdmVyc2lvbiI6IjQuMS4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyOTciLCJTcGVjIE51bWJlciI6IjAwMi0zMDI5NyIsIkRvYyBUaXRsZSI6IkJsdWV0b290aCZyZWc7IExFIEZpbmQgTWUgUHJvZmlsZSIsInJpZCI6ImFtbWwiLCJEb2MgdmVyc2lvbiI6IjQuMi4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
 
 ## Requirements
 
 - [ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) v3.0 or later (tested with v3.0)
 - Programming language: C
 - Board support package (BSP) minimum required version for:
-   - PSoC&trade; 6 MCU: v4.0.0
+   - PSoC&trade; 6 MCU BSPs: v4.0.0
    - CYW920829M2EVB-01: v1.0.0.Beta1
-- Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu) with [AIROC&trade; CYW43012 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43012), and [AIROC™ CYW20829 Bluetooth® LE SoC](https://www.infineon.com/cms/en/product/promopages/airoc20829)
+- Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu/) with [AIROC™ CYW43xxx Wi-Fi & Bluetooth® combo chips](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/), [PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu/psoc-63/) and [AIROC™ CYW20829 Bluetooth® LE SoC](https://www.infineon.com/cms/en/product/promopages/airoc20829)
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
 - GNU Arm&reg; embedded compiler v10.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
 - Arm&reg; compiler v6.16 (`ARM`)
-- Arm&reg; compiler v6.13 (`ARM`)
 - IAR C/C++ compiler v9.30.1 (`IAR`)
-- IAR C/C++ compiler v8.42.2 (`IAR`)
-
 
 ## Supported kits (make variable 'TARGET')
 
-**Note:** - Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`) and AIROC™ CYW20829 Bluetooth® kit (`CYW920829M2EVB-01`) do not support the application running on CM0+ core.
+**Note:** - Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`), AIROC™ CYW20829 Bluetooth® kit (`CYW920829M2EVB-01`) and PSoC&trade; 6 Bluetooth&reg; LE kits (`CY8CKIT-062-BLE`, `CY8CPROTO-063-BLE`, `CYBLE-416045-EVAL`) do not support the application running on CM0+ core.
 
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; prototyping kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`) – Default value of `TARGET`
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
@@ -48,20 +45,19 @@ The code example can run on either CM4 or CM0+ core of PSoC&trade; 6 MCU. Refer 
 
 This example uses the board's default configuration. See the kit user guide to ensure that the board is configured correctly.
 
-**Note:** The PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit (CY8CKIT-062-WIFI-BT) ships with KitProg2 installed. The ModusToolbox&trade; software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
+**Note:** The PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit (CY8CKIT-062-WIFI-BT) and The PSoC&trade; 6 Bluetooth&reg; LE pioneer kit (CY8CKIT-062-BLE) ships with KitProg2 installed. The ModusToolbox&trade; software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
 The AIROC&trade; CYW20829 Bluetooth&reg; kit (CYW920829M2EVB-01) ships with KitProg3 version 2.30 installed. The ModusToolbox™ software requires KitProg3 with latest version 2.40. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the Firmware Loader GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 ## Software setup
 
 This code example consists of two parts: a locator and a target.
 
-For the locator, download and install the LightBlue® app for [iOS](https://apps.apple.com/us/app/lightblue/id557428110) or [Android](https://play.google.com/store/apps/details?id=com.punchthrough.lightblueexplorer&gl=US).
-
-You can also use other Android or iOS apps that support the IAS service.
-
-Scan the following QR codes from your mobile phone to download the LightBlue app.
+For the locator, download and install the AIROC&trade; Bluetooth&reg; Connect App on your [Android](https://play.google.com/store/apps/details?id=com.infineon.airocbluetoothconnect) or [iOS](https://apps.apple.com/in/app/airoc-bluetooth-connect-app/id6443702288) phone.
+Scan the following QR codes from your mobile phone to download the AIROC&trade; Bluetooth&reg; Connect app.
 
 ![](./images/qr.png)
+
+You can also use other Android or iOS apps that support the IAS service.
 
 Install a terminal emulator if you don't have one. instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en). all other required software come bundled with the Eclipse IDE for ModusToolbox&trade; software.
 
@@ -172,12 +168,11 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
 ## Operation
 
-If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.cypress.com/documentation/software-and-drivers/psoc-64-secure-mcu-secure-boot-sdk-user-guide) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
 1. Connect the board to your PC using the provided USB cable through the KitProg3 USB connector.
 
 2. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud.
 
-3. To run the application on CM0+ core of PSoC&trade; 6, open **Makefile** in the application and change CORE=CM0P. By default, the application uses CM4 core. 
+3. To run the application on CM0+ core of PSoC&trade; 6, open **Makefile** in the application and change CORE=CM0P. By default, the application uses CM4 core.
 
 4. Program the board using one of the following:
 
@@ -207,36 +202,36 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
 
    ![](images/figure3.png)
 
-6. To test using the LightBlue mobile app, do the following (see equivalent LightBlue app screenshots in Figure 2 and Figure 3):
+6. To test using the AIROC&trade; Bluetooth&reg; Connect mobile app, do the following (see equivalent AIROC&trade; Bluetooth&reg; Connect app screenshots in Figure 2 and Figure 3):
 
    1. Turn ON Bluetooth on your Android or iOS device.
 
-   2. Launch the LightBlue app.
+   2. Launch the AIROC&trade; Bluetooth&reg; Connect app.
 
-   3. If it is present on the kit, CYBSP_USER_LED2 will start blinking to indicate that advertising has started. Advertising will stop after 90 seconds if a connection has not been established and CYBSP_USER_LED will turn off.
+   3. If it is present on the kit, CYBSP_USER_LED2 will start blinking to indicate that advertising has started. Advertising will stop after 120 seconds if a connection has not been established and CYBSP_USER_LED will turn off.
 
-   4. Swipe down on the LightBlue app home screen to start scanning for Bluetooth&reg; LE peripherals; your device (“Find Me Target”) appears in the LightBlue app home screen. Select your device to establish a Bluetooth&reg; LE connection. Once the connection is established, CYBSP_USER_LED2 changes from blinking state to always ON state.
+   4. Swipe down on the AIROC&trade; Bluetooth&reg; Connect app home screen to start scanning for Bluetooth&reg; LE peripherals; your device (“Find Me Target”) appears in the AIROC&trade; Bluetooth&reg; Connect app home screen. Select your device to establish a Bluetooth&reg; LE connection. Once the connection is established, CYBSP_USER_LED2 changes from blinking state to always ON state.
 
    5. Select the 'Find Me Profile' from the carousel view.
 
    6. Select an Alert Level value on the Find Me Profile screen. Observe the state of CYBSP_USER_LED1 on the device; it changes based on the alert level.
 
-      **Figure 2. Testing with the LightBlue app on iOS**
+      **Figure 2. Testing with the AIROC&trade; Bluetooth&reg; Connect app on iOS**
 
       ![](images/figure1.png)
 
       <br />
 
-      **Figure 3. Testing with the LightBlue app on Android**
+      **Figure 3. Testing with the AIROC&trade; Bluetooth&reg; Connect app on Android**
 
       ![](images/figure2.png)
 
 
 ## Debugging
 
-You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
+You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.infineon.com/MTBEclipseIDEUserGuide).
 
-**Note:** **(Only while debugging PSoC&trade; 6 MCU)** On the CM4 CPU, some code in `main()` may execute before the debugger halts at the beginning of `main()`. This means that some code executes twice – once before the debugger stops execution, and again after the debugger resets the program counter to the beginning of `main()`. See [KBA231071](https://community.cypress.com/docs/DOC-21143) to learn about this and for the workaround.
+**Note:** **(Only while debugging)** On the CM4 CPU, some code in `main()` may execute before the debugger halts at the beginning of `main()`. This means that some code executes twice – once before the debugger stops execution, and again after the debugger resets the program counter to the beginning of `main()`. See [KBA231071](https://community.infineon.com/docs/DOC-21143) to learn about this and for the workaround.
 
 
 ## Design and implementation
@@ -269,7 +264,7 @@ This section explains the ModusToolbox&trade; software resources and their confi
 
    Note that unlike the device configurator, the Bluetooth&reg; configurator settings and files are local to each respective application. As explained in the [Design and implementation](#design-and-implementation) section, the only extra service added is the Immediate Alert Service (IAS). See the [Bluetooth&reg; Configurator Guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Bluetooth_Configurator_Guide_3-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d718a49017d99aaf5b231be&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-files).
 
-**Note:** For PSoC&trade; 6 Bluetooth&reg; LE based BSPs(CY8CKIT-062-BLE, CY8CPROTO-063-BLE, CYBLE-416045-EVAL) with support for AIROC&trade; BTSTACK, if you want to use bt-configurator tool, please select the option 'AIROC&trade; BTSTACK with Bluetooth&reg; LE only (CYW20829, PSoC&trade; 6 with CYW43xxx Connectivity device)' from the dropdown to select the device. Do not use the option 'PSoC&trade; Bluetooth&reg; LE Legacy Stack (PSoC&trade; 6-BLE)' since it is not compatible with AIROC&trade; BTSTACK. 
+**Note:** For PSoC&trade; 6 Bluetooth&reg; LE based BSPs(CY8CKIT-062-BLE, CY8CPROTO-063-BLE, CYBLE-416045-EVAL) with support for AIROC&trade; BTSTACK, if you want to use bt-configurator tool, please select the option 'AIROC&trade; BTSTACK with Bluetooth&reg; LE only (CYW20829, PSoC&trade; 6 with CYW43xxx Connectivity device)' from the dropdown to select the device. Do not use the option 'PSoC&trade; Bluetooth&reg; LE Legacy Stack (PSoC&trade; 6-BLE)' since it is not compatible with AIROC&trade; BTSTACK.
 
 **Table 1. Application resources**
 
@@ -316,9 +311,7 @@ Document Title: *CE230297* – *Bluetooth&reg; LE find me profile*
 | 3.0.0   | Added support for 43439 kit <br /> Updated BSP to 3.0.0|
 | 4.0.0   | Updated to support ModusToolbox&trade; software v3.0 and BSPs v4.X <br /> Updated to run on CM0+ core <br /> Added support for CYW920829M2EVB-01 BSP|
 | 4.1.0   | Added support for CY8CKIT-062-BLE,CY8CPROTO-063-BLE,CYBLE-416045-EVAL |
-
-
-
+| 4.2.0   | Updated the CE to use bt-configurator v2.6|
 
 ---------------------------------------------------------
 

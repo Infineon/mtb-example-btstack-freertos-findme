@@ -8,7 +8,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2020-2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2020-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -473,6 +473,12 @@ static wiced_bt_gatt_status_t le_app_set_value(uint16_t attr_handle,
                         printf("Alert Level = %d\n", app_ias_alert_level[0]);
                         ias_led_update();
                         break;
+
+                    /* The application is not going to change its GATT DB,
+                     * So this case is not handled */
+                    case HDLD_GATT_SERVICE_CHANGED_CLIENT_CHAR_CONFIG:
+                        gatt_status = WICED_BT_GATT_SUCCESS;
+                        break;
                 }
             }
             else
@@ -533,11 +539,15 @@ static wiced_bt_gatt_status_t le_app_write_handler(uint16_t conn_id,
                                p_write_req->val_len);
 
     if( WICED_BT_GATT_SUCCESS != gatt_status )
-        {
-            printf("WARNING: GATT set attr status 0x%x\n", gatt_status);
-        }
-
-        return (gatt_status);
+    {
+        printf("WARNING: GATT set attr status 0x%x\n", gatt_status);
+    }
+    else
+    {
+        if(GATT_REQ_WRITE == opcode)
+        wiced_bt_gatt_server_send_write_rsp(conn_id, opcode, p_write_req->handle);
+    }
+    return (gatt_status);
 }
 
 /**************************************************************************************************
@@ -675,9 +685,10 @@ static wiced_bt_gatt_status_t le_app_server_handler (wiced_bt_gatt_attribute_req
         case GATT_REQ_WRITE:
         case GATT_CMD_WRITE:
              /* Attribute write request */
-             gatt_status = le_app_write_handler(p_attr_req->conn_id, p_attr_req->opcode,
+            gatt_status = le_app_write_handler(p_attr_req->conn_id, p_attr_req->opcode,
                                            &p_attr_req->data.write_req,
                                            p_attr_req->len_requested );
+
              break;
         case GATT_REQ_MTU:
             gatt_status = wiced_bt_gatt_server_send_mtu_rsp(p_attr_req->conn_id,
