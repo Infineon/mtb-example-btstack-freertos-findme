@@ -15,7 +15,7 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 - Programming language: C
 - Board support package (BSP) minimum required version for:
    - PSoC&trade; 6 MCU BSPs: v4.0.0
-   - CYW920829M2EVB-01: v1.0.0.Beta1
+   - CYW920829M2EVK-02: v1.0.0.Beta4
 - Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu/) with [AIROC™ CYW43xxx Wi-Fi & Bluetooth® combo chips](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/), [PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu/psoc-63/) and [AIROC™ CYW20829 Bluetooth® LE SoC](https://www.infineon.com/cms/en/product/promopages/airoc20829)
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
@@ -26,7 +26,7 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 
 ## Supported kits (make variable 'TARGET')
 
-**Note:** Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`), AIROC™ CYW20829 Bluetooth® kit (`CYW920829M2EVB-01`), and PSoC&trade; 6 Bluetooth&reg; LE kits (`CY8CKIT-062-BLE`, `CY8CPROTO-063-BLE`, and `CYBLE-416045-EVAL`) do not support the application running on the CM0+ core.
+**Note:** Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`), AIROC™ CYW20829 Bluetooth® kit (`CYW920829M2EVK-02`), and PSoC&trade; 6 Bluetooth&reg; LE kits (`CY8CKIT-062-BLE`, `CY8CPROTO-063-BLE`, and `CYBLE-416045-EVAL`) do not support the application running on the CM0+ core.
 
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; prototyping kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`) – Default value of `TARGET`
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
@@ -37,7 +37,7 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 - Rapid IoT connect developer kit (`CYSBSYSKIT-DEV-01`)
 - Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`)
 - [PSoC&trade; 62S2 evaluation kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2`, `CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`, `CY8CEVAL-062S2-LAI-43439M2` )
-- AIROC&trade; CYW20829 Bluetooth&reg; LE evaluation kit (`CYW920829M2EVB-01` )
+- AIROC&trade; CYW20829 Bluetooth&reg; LE evaluation kit (`CYW920829M2EVK-02` )
 - [PSoC&trade; 6 Bluetooth&reg; LE pioneer kit](https://www.infineon.com/CY8CKIT-062-BLE) (`CY8CKIT-062-BLE`)
 - [PSoC&trade; 6 Bluetooth&reg; LE prototyping kit](https://www.infineon.com/CY8CPROTO-063-BLE) (`CY8CPROTO-063-BLE`)
 - [EZ-BLE Arduino Evaluation Board](https://www.infineon.com/cms/en/product/evaluation-boards/cyble-416045-eval/) (`CYBLE-416045-EVAL`)
@@ -49,7 +49,7 @@ This example uses the board's default configuration. See the kit user guide to e
 
 **Note:** The PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit (CY8CKIT-062-WIFI-BT) and PSoC&trade; 6 Bluetooth&reg; LE pioneer kit (CY8CKIT-062-BLE) ship with KitProg2 installed. The ModusToolbox&trade; software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
-The AIROC&trade; CYW20829 Bluetooth&reg; kit (CYW920829M2EVB-01) ships with KitProg3 version 2.30 installed. The ModusToolbox™ software requires KitProg3 with latest version 2.40. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the Firmware Loader GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
+The AIROC&trade; CYW20829 Bluetooth&reg; kit (CYW920829M2EVK-02) ships with KitProg3 version 2.21 installed. The ModusToolbox™ software requires KitProg3 with latest version 2.40. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the Firmware Loader GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 ## Software setup
 
 This code example consists of two parts: a locator and a target.
@@ -316,6 +316,7 @@ Document Title: *CE230297* – *Bluetooth&reg; LE Find Me Profile*
  4.1.0   | Added support for CY8CKIT-062-BLE,CY8CPROTO-063-BLE,CYBLE-416045-EVAL
  4.2.0   | Updated the CE to use bt-configurator v2.6
  4.3.0   | Added support for CY8CEVAL-062S2-LAI-43439M2,CY8CPROTO-062S2-43439
+ 4.4.0   | Removed CYW920829M2EVB-01 from supported kits <br> Added support for CYW920829M2EVK-02
 
 ---------------------------------------------------------
 
