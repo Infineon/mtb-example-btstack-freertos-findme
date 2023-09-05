@@ -15,7 +15,7 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 - Programming language: C
 - Board support package (BSP) minimum required version for:
    - PSoC&trade; 6 MCU BSPs: v4.0.0
-   - CYW920829M2EVK-02: v1.0.0.Beta4
+   - CYW920829M2EVK-02: v1.0.1
 - Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu/) with [AIROC™ CYW43xxx Wi-Fi & Bluetooth® combo chips](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/), [PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu/psoc-63/) and [AIROC™ CYW20829 Bluetooth® LE SoC](https://www.infineon.com/cms/en/product/promopages/airoc20829)
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
@@ -29,6 +29,7 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 **Note:** Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`), AIROC™ CYW20829 Bluetooth® kit (`CYW920829M2EVK-02`), and PSoC&trade; 6 Bluetooth&reg; LE kits (`CY8CKIT-062-BLE`, `CY8CPROTO-063-BLE`, and `CYBLE-416045-EVAL`) do not support the application running on the CM0+ core.
 
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; prototyping kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`) – Default value of `TARGET`
+- [AIROC&trade; CYW20829 Bluetooth&reg; LE evaluation kit](https://www.infineon.com/CYW920829M2EVK-02) (`CYW920829M2EVK-02` )
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
 - [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
@@ -37,7 +38,6 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 - Rapid IoT connect developer kit (`CYSBSYSKIT-DEV-01`)
 - Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`)
 - [PSoC&trade; 62S2 evaluation kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2`, `CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`, `CY8CEVAL-062S2-LAI-43439M2`, `CY8CEVAL-062S2-MUR-4373EM2`, `CY8CEVAL-062S2-MUR-4373M2`)
-- AIROC&trade; CYW20829 Bluetooth&reg; LE evaluation kit (`CYW920829M2EVK-02` )
 - [PSoC&trade; 6 Bluetooth&reg; LE pioneer kit](https://www.infineon.com/CY8CKIT-062-BLE) (`CY8CKIT-062-BLE`)
 - [PSoC&trade; 6 Bluetooth&reg; LE prototyping kit](https://www.infineon.com/CY8CPROTO-063-BLE) (`CY8CPROTO-063-BLE`)
 - [EZ-BLE Arduino Evaluation Board](https://www.infineon.com/cms/en/product/evaluation-boards/cyble-416045-eval/) (`CYBLE-416045-EVAL`)
@@ -49,7 +49,7 @@ This example uses the board's default configuration. See the kit user guide to e
 
 **Note:** The PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit (CY8CKIT-062-WIFI-BT) and PSoC&trade; 6 Bluetooth&reg; LE pioneer kit (CY8CKIT-062-BLE) ship with KitProg2 installed. The ModusToolbox&trade; software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
-The AIROC&trade; CYW20829 Bluetooth&reg; kit (CYW920829M2EVK-02) ships with KitProg3 version 2.21 installed. The ModusToolbox™ software requires KitProg3 with latest version 2.40. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the Firmware Loader GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
+The AIROC&trade; CYW20829 Bluetooth&reg; kit (CYW920829M2EVK-02) ships with KitProg3 version 2.21 installed. The ModusToolbox™ software requires KitProg3 with latest version 2.40. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 ## Software setup
 
 This code example consists of two parts: a locator and a target.
@@ -61,7 +61,7 @@ Scan the following QR codes from your mobile phone to download the AIROC&trade; 
 
 You can also use other Android or iOS apps that support the IAS service.
 
-Install a terminal emulator if you don't have one. instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en). all other required software come bundled with the Eclipse IDE for ModusToolbox&trade; software.
+Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en). All other required software come bundled with the Eclipse IDE for ModusToolbox&trade; software.
 
 ## Using the code example
 
@@ -108,10 +108,10 @@ Argument | Description | Required/optional
 
 <br />
 
-The following example clones the "[Bluetooth&reg; LE Find Me](https://github.com/Infineon/mtb-example-btstack-freertos-ble-findme)" application with the desired name "BluetoothLEFindme" configured for the *CY8CKIT-062-WIFI-BT* BSP into the specified working directory, *C:/mtb_projects*:
+The following example clones the "[Bluetooth&reg; LE Find Me](https://github.com/Infineon/mtb-example-btstack-freertos-findme)" application with the desired name "BluetoothLEFindme" configured for the *CY8CKIT-062-WIFI-BT* BSP into the specified working directory, *C:/mtb_projects*:
 
    ```
-   project-creator-cli --board-id CY8CKIT-062-WIFI-BT --app-id mtb-example-btstack-freertos-ble-findme --user-app-name BluetoothLEFindme --target-dir "C:/mtb_projects"
+   project-creator-cli --board-id CY8CKIT-062-WIFI-BT --app-id mtb-example-btstack-freertos-findme --user-app-name BluetoothLEFindme --target-dir "C:/mtb_projects"
    ```
 
 **Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; software user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
@@ -212,7 +212,7 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
 
    2. Launch the AIROC&trade; Bluetooth&reg; Connect app.
 
-   3. If it is present on the kit, CYBSP_USER_LED2 will start blinking to indicate that advertising has started. Advertising will stop after 120 seconds if a connection has not been established, and CYBSP_USER_LED will turn off.
+   3. If it is present on the kit, CYBSP_USER_LED2 will start blinking to indicate that advertising has started. Advertising will stop after 120 seconds if a connection has not been established, and CYBSP_USER_LED2 will turn off.
 
    4. Swipe down on the AIROC&trade; Bluetooth&reg; Connect app home screen to start scanning for Bluetooth&reg; LE peripherals; your device (“Find Me Target”) appears in the AIROC&trade; Bluetooth&reg; Connect app home screen. Select your device to establish a Bluetooth&reg; LE connection. Once the connection is established, CYBSP_USER_LED2 changes from blinking state to always ON state.
 
@@ -317,7 +317,8 @@ Document Title: *CE230297* – *Bluetooth&reg; LE Find Me Profile*
  4.2.0   | Updated the CE to use bt-configurator v2.6
  4.3.0   | Added support for CY8CEVAL-062S2-LAI-43439M2,CY8CPROTO-062S2-43439
  4.4.0   | Removed CYW920829M2EVB-01 from supported kits <br> Added support for CYW920829M2EVK-02
- 4.5.0   |  Added support for CY8CEVAL-062S2-MUR-4373EM2 and CY8CEVAL-062S2-MUR-4373M2
+ 4.5.0   | Added support for CY8CEVAL-062S2-MUR-4373EM2 and CY8CEVAL-062S2-MUR-4373M2
+ 4.6.0   | Updated error handling and gatt_status
 
 ---------------------------------------------------------
 
