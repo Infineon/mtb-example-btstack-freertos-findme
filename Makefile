@@ -93,7 +93,7 @@ DISABLE_COMPONENTS=
 # Choose the core where the application and Bluetooth LE Host stack must run
 # CM4 -- Application and AIROC BTSTACK(Host stack) run on CM4
 # CM0P -- Application and AIROC BTSTACK(Host stack) run on CM0P
-ifneq ($(TARGET), $(filter $(TARGET), APP_CYW920829M2EVK-02))
+ifneq ($(TARGET), $(filter $(TARGET), APP_CYW920829M2EVK-02 APP_CYW989829M2EVB-01))
 CORE=CM4
 endif
 
