@@ -40,7 +40,7 @@ MTB_TYPE=COMBINED
 # To change the target, it is recommended to use the Library manager
 # ('make library-manager' from command line), which will also update Eclipse IDE launch
 # configurations.
-TARGET=CY8CPROTO-062-4343W
+TARGET=CYW920829M2EVK-02
 
 # Name of application (used to derive name of final linked file).
 #
@@ -93,7 +93,7 @@ DISABLE_COMPONENTS=
 # Choose the core where the application and Bluetooth LE Host stack must run
 # CM4 -- Application and AIROC BTSTACK(Host stack) run on CM4
 # CM0P -- Application and AIROC BTSTACK(Host stack) run on CM0P
-ifneq ($(TARGET), $(filter $(TARGET), APP_CYW920829M2EVK-02 APP_CYW989829M2EVB-01))
+ifneq ($(TARGET), $(filter $(TARGET), APP_CYW920829M2EVK-02 APP_CYW989829M2EVB-01 APP_CYW989829M2EVB-03))
 CORE=CM4
 endif
 

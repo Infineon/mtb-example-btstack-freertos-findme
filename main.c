@@ -330,6 +330,10 @@ static void le_app_init(void)
         printf("IAS LED PWM Initialization has failed! \n");
         CY_ASSERT(0);
     }
+
+    /* Initialize IAS LED state */
+    ias_led_update();
+
     /* CYBSP_USER_LED2 is only present on some kits. For those kits,it is used to indicate advertising/connection status */
 #ifdef CYBSP_USER_LED2
     /* Initialize the PWM used for Advertising LED */

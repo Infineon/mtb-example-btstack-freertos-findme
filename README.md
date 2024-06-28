@@ -13,8 +13,14 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 
 ## Requirements
 
-- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.1 or later (tested with v3.1)
-- Board support package (BSP) minimum required version: 4.0.0
+- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.2 or later (tested with v3.2)
+- Board support package (BSP) minimum required version for :
+   - CY8CKIT-062-BLE : v4.0.0
+   - CY8CPROTO-063-BLE : v4.0.0
+   - CYBLE-416045-EVAL : v4.0.0
+   - CYW920829M2EVK-02 : v2.0.0
+   - CYW989829M2EVB-01 : v2.0.0
+   - CYW989829M2EVB-03 : v2.0.0
 - Programming language: C
 - Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu) parts, [AIROC&trade; CYW20819 Bluetooth&reg; & Bluetooth&reg; LE SoC](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-bluetooth-le-bluetooth-multiprotocol/airoc-bluetooth-le-bluetooth/cyw20819), [AIROC&trade; CYW43012 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43012), [AIROC&trade; CYW4343W Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw4343w), [AIROC&trade; CYW4373 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-5-802.11ac/cyw4373), [AIROC&trade; CYW43439 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43439), [AIROC&trade; CYW43022 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-5-802.11ac/cyw43022)
 
@@ -31,9 +37,9 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 
 **Note:** Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`), AIROC&trade; CYW20829 Bluetooth&reg; kit (`CYW920829M2EVK-02`), and PSoC&trade; 6 Bluetooth&reg; LE kits (`CY8CKIT-062-BLE`, `CY8CPROTO-063-BLE`, and `CYBLE-416045-EVAL`) do not support the application running on the CM0+ core.
 
-- [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`) – Default value of `TARGET`
-- [AIROC&trade; CYW20829 Bluetooth&reg; LE Evaluation Kit](https://www.infineon.com/CYW920829M2EVK-02) (`CYW920829M2EVK-02` )
-- [AIROC&trade; CYW89829 Bluetooth&reg; LE Evaluation Kit](https://www.infineon.com/CYW989829M2EVB-01) (`CYW989829M2EVB-01`)
+- [AIROC&trade; CYW20829 Bluetooth&reg; LE Evaluation Kit](https://www.infineon.com/CYW920829M2EVK-02) (`CYW920829M2EVK-02`) – Default value of `TARGET`
+- AIROC&trade; CYW89829 Bluetooth&reg; LE Evaluation Kit (`CYW989829M2EVB-01`, `CYW989829M2EVB-03`)
+- [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`)
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
 - [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
@@ -192,6 +198,8 @@ For more details, see the [ModusToolbox&trade; tools package user guide](https:/
 ## Operation
 
 If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.infineon.com/dgdlac/Infineon-PSoC_64_Secure_MCU_Secure_Boot_SDK_User_Guide-Software-v07_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f8c361a7666) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
+
+> **Note:** Some boards only support a single LED GPIO connection between the Bluetooth&#174; SoC and the baseboard. In those cases, there is no CYBSP_USER_LED2 activity for advertising. See the application source file for "CYBSP_USER_LED2" definition.
 
 1. Connect the board to your PC using the provided USB cable through the KitProg3 USB connector.
 
@@ -374,6 +382,8 @@ Document Title: *CE230297* – *Bluetooth&reg; LE Find Me Profile*
  4.8.0   | Added support for CY8CEVAL-062S2-CYW43022CUB
  4.8.1   | Updated README.md
  4.9.0   | Added support for CY8CKIT-062S2-AI
+ 4.10.0  | Added support for CYW989829M2EVB-03
+ 5.0.0   | BSP and BTStack-integration major update for BT Firmware as a separate asset and removal of combo devices as they doesn't support firmware as separate asset |
 
 <br />
 
