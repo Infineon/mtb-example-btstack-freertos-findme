@@ -41,7 +41,7 @@ Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not sup
 - AIROC&trade; CYW89829 Bluetooth&reg; LE Evaluation Kit (`CYW989829M2EVB-01`, `CYW989829M2EVB-03`)
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`)
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
-- [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
+- [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`, `CY8CEVAL-062S2-CYW955513SDM2WLIPA`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
 - [PSoC&trade; 62S3 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
@@ -383,7 +383,8 @@ Document Title: *CE230297* – *Bluetooth&reg; LE Find Me Profile*
  4.8.1   | Updated README.md
  4.9.0   | Added support for CY8CKIT-062S2-AI
  4.10.0  | Added support for CYW989829M2EVB-03
- 5.0.0   | BSP and BTStack-integration major update for BT Firmware as a separate asset and removal of combo devices as they doesn't support firmware as separate asset |
+ 5.0.0   | BSP and BTStack-integration major update for BT Firmware as a separate asset and removal of combo devices as they doesn't support firmware as separate asset 
+ 5.1.0   | Added support for CY8CEVAL-062S2-CYW955513SDM2WLIPA
 
 <br />
 
