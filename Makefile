@@ -94,7 +94,11 @@ DISABLE_COMPONENTS=
 # CM4 -- Application and AIROC BTSTACK(Host stack) run on CM4
 # CM0P -- Application and AIROC BTSTACK(Host stack) run on CM0P
 ifneq ($(TARGET), $(filter $(TARGET), APP_CYW920829M2EVK-02 APP_CYW989829M2EVB-01 APP_CYW989829M2EVB-03))
+ifeq ($(TARGET), $(filter $(TARGET), APP_KIT_XMC72_EVK_MUR_43439M2))
+CORE=CM7
+else
 CORE=CM4
+endif
 endif
 
 # By default the build system automatically looks in the Makefile's directory

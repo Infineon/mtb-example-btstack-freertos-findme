@@ -1,69 +1,63 @@
-# Bluetooth&reg; LE Find Me Profile
+# Bluetooth&reg; LE find me profile
 
-This code example demonstrates the implementation of a simple Bluetooth&reg; Immediate Alert Service (IAS)-based Find Me Profile (FMP) using the Infineon PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE, AIROC&trade; CYW20829, AIROC&trade; CYW89829, and AIROC&trade; Wi-Fi & Bluetooth&reg; combo SoC devices with ModusToolbox&trade; software environment.
+This code example demonstrates the implementation of a simple Bluetooth&reg; Immediate Alert Service (IAS)-based Find Me Profile (FMP) using the Infineon PSOC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE, AIROC&trade; CYW20829, AIROC&trade; CYW89829, and AIROC&trade; Wi-Fi & Bluetooth&reg; combo SoC devices with ModusToolbox&trade; environment.
 
-The code example can run on either CM4 or CM0+ core of PSoC&trade; 6 MCU with AIROC&trade; Wi-Fi & Bluetooth&reg; combo SoC. See [KBA236435](https://community.infineon.com/t5/Knowledge-Base-Articles/Porting-Wi-Fi-and-Bluetooth-LE-applications-to-CM0-core-KBA236435/ta-p/378238) for steps to port a Wi-Fi or Bluetooth&reg; LE application to the CM0+ core of PSoC&trade; 6 MCU.
-Note that the PSoC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not support this feature.
+The code example can run on either CM4 or CM0+ core of PSOC&trade; 6 MCU with AIROC&trade; Wi-Fi & Bluetooth&reg; combo SoC. See [KBA236435](https://community.infineon.com/t5/Knowledge-Base-Articles/Porting-Wi-Fi-and-Bluetooth-LE-applications-to-CM0-core-KBA236435/ta-p/378238) for steps to port a Wi-Fi or Bluetooth&reg; LE application to the CM0+ core of PSOC&trade; 6 MCU.
+
+> **Note:** The PSOC&trade; 6 MCU with AIROC&trade; Bluetooth&reg; LE does not support this feature.
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-btstack-freertos-findme)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyOTciLCJTcGVjIE51bWJlciI6IjAwMi0zMDI5NyIsIkRvYyBUaXRsZSI6IkJsdWV0b290aCZyZWc7IExFIEZpbmQgTWUgUHJvZmlsZSIsInJpZCI6ImFtbWwiLCJEb2MgdmVyc2lvbiI6IjQuMS4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
-
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyOTciLCJTcGVjIE51bWJlciI6IjAwMi0zMDI5NyIsIkRvYyBUaXRsZSI6IkJsdWV0b290aCZyZWc7IExFIGZpbmQgbWUgcHJvZmlsZSIsInJpZCI6Im1pc2hyYWFtYWwiLCJEb2MgdmVyc2lvbiI6IjUuMi4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJCVEFCTEUifQ==)
 
 
 ## Requirements
 
-- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.2 or later (tested with v3.2)
-- Board support package (BSP) minimum required version for :
-   - CY8CKIT-062-BLE : v4.0.0
-   - CY8CPROTO-063-BLE : v4.0.0
-   - CYBLE-416045-EVAL : v4.0.0
-   - CYW920829M2EVK-02 : v2.0.0
-   - CYW989829M2EVB-01 : v2.0.0
-   - CYW989829M2EVB-03 : v2.0.0
+- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.2 or later (tested with v3.3)
+- Board support package (BSP) minimum required version for:
+   - PSOC&trade; 6 MCU: v5.0.0
+   - XMC7000 MCU: v2.3.0
+   - CY8CKIT-062-BLE/CY8CPROTO-063-BLE/CYBLE-416045-EVAL : v4.0.0
+   - CYW920829M2EVK-02/CYW989829M2EVB-01/CYW989829M2EVB-03 : v2.0.0
 - Programming language: C
-- Associated parts: All [PSoC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu) parts, [AIROC&trade; CYW20819 Bluetooth&reg; & Bluetooth&reg; LE SoC](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-bluetooth-le-bluetooth-multiprotocol/airoc-bluetooth-le-bluetooth/cyw20819), [AIROC&trade; CYW43012 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43012), [AIROC&trade; CYW4343W Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw4343w), [AIROC&trade; CYW4373 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-5-802.11ac/cyw4373), [AIROC&trade; CYW43439 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43439), [AIROC&trade; CYW43022 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-5-802.11ac/cyw43022)
-
+- Associated parts: All [XMC7000 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/32-bit-xmc7000-industrial-microcontroller-arm-cortex-m7/) and [PSOC&trade; 6 MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu) parts, [AIROC&trade; CYW20819 Bluetooth&reg; and Bluetooth&reg; LE SoC](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-bluetooth-le-bluetooth-multiprotocol/airoc-bluetooth-le-bluetooth/cyw20819), [AIROC&trade; CYW43012 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43012), [AIROC&trade; CYW4343W Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw4343w), [AIROC&trade; CYW4373 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-5-802.11ac/cyw4373), [AIROC&trade; CYW43439 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-4-802.11n/cyw43439), [AIROC&trade; CYW43022 Wi-Fi & Bluetooth&reg; combo chip](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/wi-fi-5-802.11ac/cyw43022).
 
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
-- GNU Arm&reg; Embedded Compiler v11.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
-- Arm&reg; Compiler v6.16 (`ARM`)
-- IAR C/C++ Compiler v9.30.1 (`IAR`)
+- GNU Arm&reg; Embedded Compiler v11.3.1 (`GCC_ARM`) – Default value of `TOOLCHAIN`
+- Arm&reg; Compiler v6.20 (`ARM`)
+- IAR C/C++ Compiler v9.50.2 (`IAR`)
 
 
 ## Supported kits (make variable 'TARGET')
 
-**Note:** Rapid IoT connect platform RP01 feather kit (`CYSBSYSKIT-01`), AIROC&trade; CYW20829 Bluetooth&reg; kit (`CYW920829M2EVK-02`), and PSoC&trade; 6 Bluetooth&reg; LE kits (`CY8CKIT-062-BLE`, `CY8CPROTO-063-BLE`, and `CYBLE-416045-EVAL`) do not support the application running on the CM0+ core.
+> **Note:** AIROC&trade; CYW20829 Bluetooth&reg; kit (`CYW920829M2EVK-02`), and PSOC&trade; 6 Bluetooth&reg; LE kits (`CY8CKIT-062-BLE`, `CY8CPROTO-063-BLE`, and `CYBLE-416045-EVAL`) do not support the application running on the CM0+ core.
 
 - [AIROC&trade; CYW20829 Bluetooth&reg; LE Evaluation Kit](https://www.infineon.com/CYW920829M2EVK-02) (`CYW920829M2EVK-02`) – Default value of `TARGET`
-- AIROC&trade; CYW89829 Bluetooth&reg; LE Evaluation Kit (`CYW989829M2EVB-01`, `CYW989829M2EVB-03`)
-- [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`)
-- [PSoC&trade; 6 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
-- [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`, `CY8CEVAL-062S2-CYW955513SDM2WLIPA`)
-- [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
-- [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
-- [PSoC&trade; 62S3 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
-- Rapid IoT connect developer kit (`CYSBSYSKIT-DEV-01`)
-- Rapid IoT connect platform RP01 feather Kit (`CYSBSYSKIT-01`)
-- [PSoC&trade; 62S2 Evaluation Kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2`, `CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`, `CY8CEVAL-062S2-LAI-43439M2`, `CY8CEVAL-062S2-MUR-4373EM2`, `CY8CEVAL-062S2-MUR-4373M2`,`CY8CEVAL-062S2-CYW43022CUB`)
-- [PSoC&trade; 6 Bluetooth&reg; LE Pioneer Kit](https://www.infineon.com/CY8CKIT-062-BLE) (`CY8CKIT-062-BLE`)
-- [PSoC&trade; 6 Bluetooth&reg; LE Prototyping Kit](https://www.infineon.com/CY8CPROTO-063-BLE) (`CY8CPROTO-063-BLE`)
+- AIROC&trade; CYW89829 Bluetooth&reg; LE Evaluation Kit (`CYW989829M2EVB-01`,`CYW989829M2EVB-03`)
+- [PSOC&trade; 6 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`)
+- [PSOC&trade; 6 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
+- [PSOC&trade; 62S2 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`, `CY8CEVAL-062S2-CYW955513SDM2WLIPA`)
+- [PSOC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
+- [PSOC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
+- [PSOC&trade; 62S3 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
+- [PSOC&trade; 62S2 Evaluation Kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2`, `CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`, `CY8CEVAL-062S2-LAI-43439M2`, `CY8CEVAL-062S2-MUR-4373EM2`, `CY8CEVAL-062S2-MUR-4373M2`,`CY8CEVAL-062S2-CYW43022CUB`)
+- [PSOC&trade; 6 Bluetooth&reg; LE Pioneer Kit](https://www.infineon.com/CY8CKIT-062-BLE) (`CY8CKIT-062-BLE`)
+- [PSOC&trade; 6 Bluetooth&reg; LE Prototyping Kit](https://www.infineon.com/CY8CPROTO-063-BLE) (`CY8CPROTO-063-BLE`)
 - [EZ-BLE Arduino Evaluation Board](https://www.infineon.com/cms/en/product/evaluation-boards/cyble-416045-eval/) (`CYBLE-416045-EVAL`)
-- [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062S2-43439) (`CY8CPROTO-062S2-43439`)
-- [PSoC&trade; 6 AI Evaluation Kit](https://www.infineon.com/CY8CKIT-062S2-AI) (`CY8CKIT-062S2-AI`)
-
+- [PSOC&trade; 62S2 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062S2-43439) (`CY8CPROTO-062S2-43439`)
+- [PSOC&trade; 6 AI Evaluation Kit](https://www.infineon.com/CY8CKIT-062S2-AI) (`CY8CKIT-062S2-AI`)
+- [XMC7200 Evaluation Kit](https://www.infineon.com/KIT_XMC72_EVK) (`KIT_XMC72_EVK_MUR_43439M2`)
 
 
 ## Hardware setup
 
 This example uses the board's default configuration. See the kit user guide to ensure that the board is configured correctly.
 
-> **Note:** The PSoC&trade; 6 Bluetooth&reg; LE Pioneer Kit (CY8CKIT-062-BLE) and the PSoC&trade; 6 Wi-Fi Bluetooth&reg; Pioneer Kit (CY8CKIT-062-WIFI-BT) ship with KitProg2 installed. ModusToolbox&trade; requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
+> **Note:** The PSOC&trade; 6 Bluetooth&reg; LE Pioneer Kit (CY8CKIT-062-BLE) and the PSOC&trade; 6 Wi-Fi Bluetooth&reg; Pioneer Kit (CY8CKIT-062-WIFI-BT) ship with KitProg2 installed. ModusToolbox&trade; requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
-> **Note:** The AIROC&trade; CYW20829 Bluetooth&reg; Kit (CYW920829M2EVK-02) ships with KitProg3 version 2.21 installed. The ModusToolbox&trade; software requires KitProg3 with latest version 2.40. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
-
+> **Note:** The AIROC&trade; CYW20829 Bluetooth&reg; Kit (CYW920829M2EVK-02) ships with KitProg3 version 2.21 installed. The ModusToolbox&trade; requires KitProg3 with latest version 2.40. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
 
 ## Software setup
@@ -79,8 +73,7 @@ Scan the following QR codes from your mobile phone to download the AIROC&trade; 
 
 You can also use other Android or iOS apps that support the IAS service.
 
-Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://teratermproject.github.io/index-en.html). All other required software come bundled with the Eclipse IDE for ModusToolbox&trade; software.
-
+Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://teratermproject.github.io/index-en.html). All other required software come bundled with the Eclipse IDE for ModusToolbox&trade;.
 
 
 ## Using the code example
@@ -106,7 +99,7 @@ The ModusToolbox&trade; tools package provides the Project Creator as both a GUI
 
    > **Note:** Depending on how you open the Project Creator tool, these fields may be pre-selected for you.
 
-   b.	Select this code example from the list by enabling its check box.
+   b. Select this code example from the list by enabling its check box.
 
    > **Note:** You can narrow the list of displayed examples by typing in the filter box.
 
@@ -116,11 +109,12 @@ The ModusToolbox&trade; tools package provides the Project Creator as both a GUI
 
 </details>
 
+
 <details><summary><b>Use Project Creator CLI</b></summary>
 
 The 'project-creator-cli' tool can be used to create applications from a CLI terminal or from within batch files or shell scripts. This tool is available in the *{ModusToolbox&trade; install directory}/tools_{version}/project-creator/* directory.
 
-Use a CLI terminal to invoke the 'project-creator-cli' tool. On Windows, use the command line 'modus-shell' program provided in the ModusToolbox&trade; installation instead of a standard Windows command-line application. This shell provides access to all ModusToolbox&trade; tools. You can access it by typing "modus-shell" in the search box in the Windows menu. In Linux and macOS, you can use any terminal application.
+Use a CLI terminal to invoke the 'project-creator-cli' tool. On Windows, use the command-line 'modus-shell' program provided in the ModusToolbox&trade; installation instead of a standard Windows command-line application. This shell provides access to all ModusToolbox&trade; tools. You can access it by typing "modus-shell" in the search box in the Windows menu. In Linux and macOS, you can use any terminal application.
 
 The following example clones the "[LE Find me](https://github.com/Infineon/mtb-example-btstack-freertos-findme)" application with the desired name "BluetoothLEFindme" configured for the *CY8CKIT-062-WIFI-BT* BSP into the specified working directory, *C:/mtb_projects*:
 
@@ -128,19 +122,20 @@ The following example clones the "[LE Find me](https://github.com/Infineon/mtb-e
    project-creator-cli --board-id CY8CKIT-062-WIFI-BT --app-id mtb-example-btstack-freertos-findme --user-app-name BluetoothLEFindme --target-dir "C:/mtb_projects"
    ```
 
+
 The 'project-creator-cli' tool has the following arguments:
 
- Argument | Description | Required/optional
- ---------|-------------|-----------
- `--board-id` | Defined in the <id> field of the [BSP](https://github.com/Infineon?q=bsp-manifest&type=&language=&sort=) manifest | Required
- `--app-id`   | Defined in the <id> field of the [CE](https://github.com/Infineon?q=ce-manifest&type=&language=&sort=) manifest | Required
- `--target-dir`| Specify the directory in which the application is to be created if you prefer not to use the default current working directory | Optional
- `--user-app-name`| Specify the name of the application if you prefer to have a name other than the example's default name | Optional
+Argument | Description | Required/optional
+---------|-------------|-----------
+`--board-id` | Defined in the <id> field of the [BSP](https://github.com/Infineon?q=bsp-manifest&type=&language=&sort=) manifest | Required
+`--app-id`   | Defined in the <id> field of the [CE](https://github.com/Infineon?q=ce-manifest&type=&language=&sort=) manifest | Required
+`--target-dir`| Specify the directory in which the application is to be created if you prefer not to use the default current working directory | Optional
+`--user-app-name`| Specify the name of the application if you prefer to have a name other than the example's default name | Optional
+<br>
 
 > **Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; tools package user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at {ModusToolbox&trade; install directory}/docs_{version}/mtb_user_guide.pdf).
 
 </details>
-
 
 
 ### Open the project
@@ -193,19 +188,17 @@ For more details, see the [ModusToolbox&trade; tools package user guide](https:/
 </details>
 
 
-
-
 ## Operation
 
-If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.infineon.com/dgdlac/Infineon-PSoC_64_Secure_MCU_Secure_Boot_SDK_User_Guide-Software-v07_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f8c361a7666) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
+If using a PSOC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSOC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.infineon.com/dgdlac/Infineon-PSoC_64_Secure_MCU_Secure_Boot_SDK_User_Guide-Software-v07_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f8c361a7666) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
 
-> **Note:** Some boards only support a single LED GPIO connection between the Bluetooth&#174; SoC and the baseboard. In those cases, there is no CYBSP_USER_LED2 activity for advertising. See the application source file for "CYBSP_USER_LED2" definition.
+> **Note:** Some boards only support a single LED GPIO connection between the Bluetooth&reg; SoC and the baseboard. In those cases, there is no CYBSP_USER_LED2 activity for advertising. See the application source file for "CYBSP_USER_LED2" definition.
 
 1. Connect the board to your PC using the provided USB cable through the KitProg3 USB connector.
 
 2. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud.
 
-3. To run the application on the CM0+ core of PSoC&trade; 6, open the Makefile in the application and change `CORE=CM0P`. By default, the application uses the CM4 core.
+3. To run the application on the CM0+ core of PSOC&trade; 6, open the Makefile in the application and change `CORE=CM0P`. By default, the application uses the CM4 core.
 
 4. Program the board using one of the following:
 
@@ -267,7 +260,6 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
       ![](images/figure2.png)
 
 
-
 ## Debugging
 
 You can debug the example to step through the code.
@@ -289,8 +281,6 @@ Follow the instructions in your preferred IDE.
 </details>
 
 
-
-
 ## Design and implementation
 
 The 'Find Me Locator' (the Bluetooth&reg; LE Central device) is a Bluetooth&reg; LE GATT Client. The 'Find Me Target' (the Peripheral device) is a Bluetooth&reg; LE GATT Server with the IAS implemented, as Figure 4 shows.
@@ -299,7 +289,7 @@ The 'Find Me Locator' (the Bluetooth&reg; LE Central device) is a Bluetooth&reg;
 
 ![](images/figure4.png)
 
-The Bluetooth&reg; LE Find Me Profile defines what happens when the locating central device broadcasts a change in the alert level.
+The Bluetooth&reg; LE find me profile defines what happens when the locating central device broadcasts a change in the alert level.
 
 The Find Me Locator performs service discovery using the "GATT Discover All Primary Services" procedure. The Bluetooth&reg; LE service characteristic discovery is done by the "Discover All Characteristics of a Service" procedure. When the Find Me Locator wants to cause an alert on the Find Me Target, it writes an alert level in the Alert Level characteristic of the IAS. When the Find Me Target receives an alert level, it indicates the level using the CYBSP_USER_LED1: OFF for no alert, blinking for mild alert, and ON for high alert.
 
@@ -310,9 +300,9 @@ The Find Me Locator performs service discovery using the "GATT Discover All Prim
 
 ### Resources and settings
 
-This section explains the ModusToolbox&trade; software resources and their configuration as used in this code example. Note that all the configuration explained in this section has already been done in the code example.
+This section explains the ModusToolbox&trade; resources and their configuration as used in this code example. Note that all the configuration explained in this section has already been done in the code example.
 
-- **Device Configurator:** ModusToolbox&trade; software stores the configuration settings of the application in the *design.modus* file. This file is used by the Device Configurator, which generates the configuration firmware. This firmware is stored in the application's *GeneratedSource* folder.
+- **Device Configurator:** ModusToolbox&trade; stores the configuration settings of the application in the *design.modus* file. This file is used by the Device Configurator, which generates the configuration firmware. This firmware is stored in the application's *GeneratedSource* folder.
 
    By default, all applications in a workspace share the same *design.modus* file – i.e., they share the same pin configuration. Each BSP has a default *design.modus* file in the *mtb_shared\TARGET_\<bsp name\>\\<version\>\COMPONENT_BSP_DESIGN_MODUS* directory. It is not recommended to modify the configuration of a standard BSP directly.
 
@@ -322,37 +312,32 @@ This section explains the ModusToolbox&trade; software resources and their confi
 
    Note that unlike the Device Configurator, the Bluetooth&reg; Configurator settings and files are local to each respective application. As explained in the [Design and implementation](#design-and-implementation) section, the only extra service added is the Immediate Alert Service (IAS). See the [Bluetooth&reg; Configurator guide](https://www.infineon.com/dgdl/Infineon-ModusToolbox_Bluetooth_Configurator_Guide_3-UserManual-v01_00-EN.pdf?fileId=8ac78c8c7d718a49017d99aaf5b231be).
 
-**Note:** For PSoC&trade; 6 Bluetooth&reg; LE-based BSPs (CY8CKIT-062-BLE, CY8CPROTO-063-BLE, CYBLE-416045-EVAL) with support for AIROC&trade; BTSTACK, if you want to use the bt-configurator tool, select the *AIROC&trade; BTSTACK with Bluetooth&reg; LE only (CYW20829, PSoC&trade; 6 with CYW43xxx Connectivity device)* option from the drop-down to select the device. Do not use the *PSoC&trade; Bluetooth&reg; LE Legacy Stack (PSoC&trade; 6-BLE)* option because it is not compatible with AIROC&trade; BTSTACK.
+> **Note:** For PSOC&trade; 6 Bluetooth&reg; LE-based BSPs (CY8CKIT-062-BLE, CY8CPROTO-063-BLE, CYBLE-416045-EVAL) with support for AIROC&trade; BTSTACK, if you want to use the bt-configurator tool, select the *AIROC&trade; BTSTACK with Bluetooth&reg; LE only (CYW20829, PSOC&trade; 6 with CYW43xxx Connectivity device)* option from the drop-down to select the device. Do not use the *PSOC&trade; Bluetooth&reg; LE Legacy Stack (PSOC&trade; 6-BLE)* option because it is not compatible with AIROC&trade; BTSTACK.
 
 **Table 1. Application resources**
 
- Resource  |  Alias/object     |    Purpose     
- :------- | :------------    | :------------ 
+ Resource  |  Alias/object     |    Purpose
+ :-------- | :-------------    | :------------
  UART (HAL) |cy_retarget_io_uart_obj | UART HAL object used by Retarget-IO for the Debug UART port
  GPIO (HAL)    | CYBSP_USER_LED1         | Changes the state depending on the alert level
  GPIO (HAL)    | CYBSP_USER_LED2         | Depicts device states
  PWM (HAL)    | adv_led_pwm        | PWM HAL object for controlling the advertising LED (CYBSP_USER_LED2)
  PWM (HAL)    | ias_led_pwm        | PWM HAL object for controlling the alert level LED (CYBSP_USER_LED1)
-
 <br>
 
 
-
 ## Related resources
- 
- Resources  | Links
- -----------|----------------------------------
- Application notes  | [AN228571](https://www.infineon.com/AN228571) – Getting started with PSoC&trade; 6 MCU on ModusToolbox&trade; <br />  [AN215656](https://www.infineon.com/AN215656) – PSoC&trade; 6 MCU: Dual-CPU system design <br /> [AN234334](https://www.infineon.com/AN234334) – Getting started with XMC&trade; 7000 MCU on ModusToolbox&trade;
- Code examples  | [Using ModusToolbox&trade;](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub
- Device documentation | [PSoC&trade; 6 MCU datasheets](https://documentation.infineon.com/html/psoc6/bnm1651211483724.html) <br /> [PSoC&trade; 6 technical reference manuals](https://documentation.infineon.com/html/psoc6/zrs1651212645947.html)<br /> [AIROC&trade; CYW20829 Bluetooth&reg; LE SoC](https://www.infineon.com/cms/en/product/promopages/airoc20829)
- Development kits | Select your kits from the [Evaluation board finder](https://www.infineon.com/cms/en/design-support/finder-selection-tools/product-finder/evaluation-board).
- Libraries on GitHub  | [mtb-pdl-cat1](https://github.com/Infineon/mtb-pdl-cat1) – PSoC&trade; 6 Peripheral Driver Library (PDL)  <br /> [mtb-hal-cat1](https://github.com/Infineon/mtb-hal-cat1) – Hardware Abstraction Layer (HAL) library <br /> [retarget-io](https://github.com/Infineon/retarget-io) – Utility library to retarget STDIO messages to a UART port
- Middleware on GitHub  | [capsense](https://github.com/Infineon/capsense) – CAPSENSE&trade; library and documents <br /> [psoc6-middleware](https://github.com/Infineon/modustoolbox-software#psoc-6-middleware-libraries) – Links to all PSoC&trade; 6 MCU middleware
- Tools  | [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use libraries and tools enabling rapid development with Infineon MCUs for applications ranging from wireless and cloud-connected systems, edge AI/ML, embedded sense and control, to wired USB connectivity using PSoC&trade; Industrial/IoT MCUs, AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices, XMC&trade; Industrial MCUs, and EZ-USB&trade;/EZ-PD&trade; wired connectivity controllers. ModusToolbox&trade; incorporates a comprehensive set of BSPs, HAL, libraries, configuration tools, and provides support for industry-standard IDEs to fast-track your embedded application development.
 
-<br />
-
-
+Resources  | Links
+-----------|----------------------------------
+ Application notes  | [AN228571](https://www.infineon.com/AN228571) – Getting started with PSOC&trade; 6 MCU on ModusToolbox&trade; <br>  [AN215656](https://www.infineon.com/AN215656) – PSOC&trade; 6 MCU: Dual-CPU system design <br> [AN234334](https://www.infineon.com/AN234334) – Getting started with XMC&trade; 7000 MCU on ModusToolbox&trade;
+Code examples  | [Using ModusToolbox&trade;](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub
+ Device documentation | [PSOC&trade; 6 MCU datasheets](https://documentation.infineon.com/html/psoc6/bnm1651211483724.html) <br> [PSOC&trade; 6 technical reference manuals](https://documentation.infineon.com/html/psoc6/zrs1651212645947.html)<br> [AIROC&trade; CYW20829 Bluetooth&reg; LE SoC](https://www.infineon.com/cms/en/product/promopages/airoc20829)
+Development kits | Select your kits from the [Evaluation board finder](https://www.infineon.com/cms/en/design-support/finder-selection-tools/product-finder/evaluation-board).
+ Libraries on GitHub  | [mtb-pdl-cat1](https://github.com/Infineon/mtb-pdl-cat1) – PSOC&trade; 6 Peripheral Driver Library (PDL)  <br> [mtb-hal-cat1](https://github.com/Infineon/mtb-hal-cat1) – Hardware Abstraction Layer (HAL) library <br> [retarget-io](https://github.com/Infineon/retarget-io) – Utility library to retarget STDIO messages to a UART port
+Middleware on GitHub  | [CAPSENSE&trade;](https://github.com/Infineon/capsense) – CAPSENSE&trade; library and documents <br> [psoc6-middleware](https://github.com/Infineon/modustoolbox-software#psoc-6-middleware-libraries) – Links to all PSOC&trade; 6 MCU middleware
+Tools  | [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use libraries and tools enabling rapid development with Infineon MCUs for applications ranging from wireless and cloud-connected systems, edge AI/ML, embedded sense and control, to wired USB connectivity using PSOC&trade; Industrial/IoT MCUs, AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices, XMC&trade; Industrial MCUs, and EZ-USB&trade;/EZ-PD&trade; wired connectivity controllers. ModusToolbox&trade; incorporates a comprehensive set of BSPs, HAL, libraries, configuration tools, and provides support for industry-standard IDEs to fast-track your embedded application development.
+<br>
 
 
 ## Other resources
@@ -360,18 +345,17 @@ This section explains the ModusToolbox&trade; software resources and their confi
 Infineon provides a wealth of data at [www.infineon.com](https://www.infineon.com) to help you select the right device, and quickly and effectively integrate it into your design.
 
 
-
 ## Document history
 
-Document Title: *CE230297* – *Bluetooth&reg; LE Find Me Profile*
+Document Title: *CE230297* – *Bluetooth&reg; LE find me profile*
 
  Version | Description of change
  ------- | ---------------------
- 1.0.0   | New code example
+ 1.0.0   |  New code example
  1.1.0   | Added support for Rapid IoT Connect Developer Kit (CYSBSYSKIT-DEV-01)
- 2.0.0   | Code Example updated to support ModusToolbox&trade; software v2.3.1 and it is not backward compatible with v2.3 and below
+ 2.0.0   | Code Example updated to support ModusToolbox&trade; v2.3.1 and it is not backward compatible with v2.3 and below
  3.0.0   | Added support for 43439 kit <br> Updated BSP to 3.0.0
- 4.0.0   | Updated to support ModusToolbox&trade; software v3.0 and BSPs v4.X <br> Updated to run on CM0+ core <br> Added support for CYW920829M2EVB-01 BSP
+ 4.0.0   | Updated to support ModusToolbox&trade; v3.0 and BSPs v4.X <br> Updated to run on CM0+ core <br> Added support for CYW920829M2EVB-01 BSP
  4.1.0   | Added support for CY8CKIT-062-BLE,CY8CPROTO-063-BLE,CYBLE-416045-EVAL
  4.2.0   | Updated the CE to use bt-configurator v2.6
  4.3.0   | Added support for CY8CEVAL-062S2-LAI-43439M2,CY8CPROTO-062S2-43439
@@ -385,9 +369,8 @@ Document Title: *CE230297* – *Bluetooth&reg; LE Find Me Profile*
  4.10.0  | Added support for CYW989829M2EVB-03
  5.0.0   | BSP and BTStack-integration major update for BT Firmware as a separate asset and removal of combo devices as they doesn't support firmware as separate asset 
  5.1.0   | Added support for CY8CEVAL-062S2-CYW955513SDM2WLIPA
-
-<br />
-
+ 5.2.0   | Added support for KIT_XMC72_EVK_MUR_43439M2
+<br>
 
 
 All referenced product or service names and trademarks are the property of their respective owners.
